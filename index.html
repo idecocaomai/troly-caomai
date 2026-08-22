@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDECO — Cùng nhau chia sẻ công nghệ</title>
+<style>
+  :root{
+    --green:#15803d; --green-l:#22c55e; --green-d:#0b5227;
+    --red:#ee3a23; --ink:#111827; --ink2:#4b5563;
+    --paper:#f6f8f4; --line:#dfe5da;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+       background-image:radial-gradient(circle at 1px 1px, rgba(21,128,61,.09) 1px, transparent 0);
+       background-size:26px 26px}
+  .top{max-width:1040px;margin:0 auto;padding:26px 24px 0;display:flex;align-items:center;gap:12px}
+  .top .lg{width:40px;height:40px;border-radius:11px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:.5px}
+  .top b{font-size:15px;letter-spacing:2.6px;text-transform:uppercase;color:var(--ink2);font-weight:700}
+
+  .hero{max-width:1040px;margin:0 auto;padding:44px 24px 10px;text-align:center}
+  .eyebrow{display:inline-block;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--green-d);
+           background:#e7f6ec;border:1px solid #c6e9d2;padding:6px 14px;border-radius:999px;font-weight:700}
+  h1.slogan{
+    margin:22px auto 0; max-width:14.5em;
+    font-size:clamp(30px,6.2vw,62px); line-height:1.14; font-weight:900; letter-spacing:-.5px;
+    color:var(--green);
+    -webkit-text-stroke:1.5px #ffffff;
+    paint-order:stroke fill;
+    text-shadow:
+      0 1px 0 #d7ecdc,
+      0 2px 0 #cbe6d2,
+      0 3px 0 #bfe0c8,
+      0 6px 14px rgba(11,82,39,.30),
+      0 18px 42px rgba(11,82,39,.22);
+  }
+  h1.slogan em{font-style:normal;color:var(--green-d);display:block}
+  .rule{width:96px;height:5px;border-radius:99px;background:linear-gradient(90deg,var(--green-l),var(--green-d));margin:26px auto 0;box-shadow:0 4px 12px rgba(11,82,39,.3)}
+  .lede{max-width:640px;margin:20px auto 0;color:var(--ink2);font-size:17px}
+  .cta{margin:26px 0 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .cta button{border:0;cursor:pointer;font:inherit;font-weight:700;font-size:15px;padding:12px 22px;border-radius:12px}
+  .cta .p{background:var(--green);color:#fff;box-shadow:0 8px 20px rgba(11,82,39,.28)}
+  .cta .p:hover{background:var(--green-d)}
+  .cta .s{background:#fff;color:var(--ink2);border:1px solid var(--line)}
+
+  .grid{max-width:1040px;margin:54px auto 0;padding:0 24px 120px;display:grid;gap:16px;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 20px;
+        box-shadow:0 10px 26px rgba(17,24,39,.06)}
+  .card .n{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--green);text-transform:uppercase}
+  .card h3{margin:10px 0 7px;font-size:17px}
+  .card p{margin:0;color:var(--ink2);font-size:14.5px;line-height:1.62}
+  code{background:#eef1ec;padding:2px 6px;border-radius:5px;font-size:13.5px}
+</style>
+</head>
+<body>
+
+<div class="top"><span class="lg">ID</span><b>IDECO</b></div>
+
+<section class="hero">
+  <span class="eyebrow">Trợ lý AI nội bộ</span>
+  <h1 class="slogan">CÙNG NHAU CHIA SẺ CÔNG NGHỆ<em>CÙNG NHAU KIẾM KHÁCH HÀNG VÀ DOANH THU TỐT HƠN</em></h1>
+  <div class="rule"></div>
+  <p class="lede">Hỏi bất cứ điều gì về sản phẩm, khách hàng, quy trình. Gửi kèm PDF, Word, Excel để trợ lý đọc và phân tích. Bật tra cứu web khi cần số liệu mới.</p>
+  <div class="cta">
+    <button class="p" onclick="window.dispatchEvent(new CustomEvent('ideco-chat-open'))">Mở trợ lý “Chào Bạn”</button>
+    <button class="s" onclick="document.getElementById('huongdan').scrollIntoView({behavior:'smooth'})">Cách nhúng vào website</button>
+  </div>
+</section>
+
+<section class="grid" id="huongdan">
+  <div class="card"><div class="n">Project</div><h3>Mỗi việc một bộ chỉ dẫn</h3>
+    <p>Tạo project trong ⚙ Cài đặt, viết chỉ dẫn riêng cho AI (giọng văn, dữ liệu nền, cách trả lời). Chọn project nào thì AI làm theo chỉ dẫn của project đó.</p></div>
+  <div class="card"><div class="n">Firebase</div><h3>Một máy khai, cả công ty dùng</h3>
+    <p>Khóa API và toàn bộ project được đồng bộ qua Firebase Realtime Database. Máy khác mở lên là có sẵn, không cần khai lại.</p></div>
+  <div class="card"><div class="n">Nghiên cứu</div><h3>Model tự chọn trang mà đọc</h3>
+    <p>Trợ lý tự suy ra cần vào trang nào, mở ra đọc toàn văn, tự đánh giá còn thiếu gì rồi đi tiếp vòng sau. Trích dẫn có đánh số kèm đường dẫn nguồn.</p></div>
+  <div class="card"><div class="n">Tài liệu</div><h3>File dài vẫn phân tích được</h3>
+    <p>PDF, Word, Excel, PowerPoint được đọc ngay trên máy bạn. File quá dài thì trợ lý chia phần đọc từng đoạn rồi tổng hợp lại.</p></div>
+  <div class="card"><div class="n">Nhúng</div><h3>Chép một khối là xong</h3>
+    <p>Chép nguyên khối giữa hai mốc <code>SCRIPT-BEGIN</code> và <code>SCRIPT-END</code> rồi dán trước thẻ <code>&lt;/body&gt;</code>. Widget chạy trong Shadow DOM, không đụng CSS hay id của trang.</p></div>
+</section>
+
+<!-- ================= IDECO-CHAT SCRIPT-BEGIN ================= -->
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   KHỐI CẤU HÌNH — CHỈNH Ở ĐÂY LÀ ĐỦ
+   ============================================================ */
+var CONFIG = {
+  ID:            'ideco-chao-ban',
+  BUILD_REV:     '20260822-6',               // in ra Console để biết trình duyệt nạp đúng bản
+
+  BRAND:         'IDECO',
+  LAUNCH_TEXT:   'Chào Bạn',
+  BOT_NAME:      'Trợ lý IDECO',
+  LOGO_URL:      '',
+
+  SIDE:          'right',
+  OFFSET_X:      22,
+  OFFSET_Y:      22,
+
+  PANEL_WIDTH:   560,                        // bề ngang khung chat thu nhỏ (px)
+  PANEL_HEIGHT:  780,                        // chiều cao khung chat thu nhỏ (px)
+  PANEL_MAXVH:   88,                         // trần chiều cao theo % màn hình
+  PANEL_LIFT:    104,                        // khung chat cách đáy màn hình bao nhiêu px
+  CHAT_FONT_PX:  16.5,
+
+  /* ---- Kết nối AI ---- */
+  API_BASE:      'https://api.b.ai/v1',
+  API_KEY:       'sk-cgie46iv00dc3aqatqarqqx5zdb7z3n9',
+  MODEL:         'deepseek-v4-flash',
+  MODEL_CHAIN:   ['deepseek-v4-flash','deepseek-v4-flash-0731','deepseek-v4','deepseek-chat','gpt-5.2'],
+  TEMPERATURE:   0.7,
+  MAX_TOKENS:    4000,
+  SEND_IMAGE:    false,
+
+  /* ---- Firebase Realtime Database (đồng bộ khóa API + project cho mọi máy) ----
+     Dán ĐÚNG đường dẫn hiện trong Firebase Console → Realtime Database.
+     Có 2 dạng tùy vùng máy chủ:
+       https://<tên-db>-default-rtdb.firebaseio.com
+       https://<tên-db>-default-rtdb.asia-southeast1.firebasedatabase.app
+     Bấm "🔌 Kiểm tra Firebase" trong ⚙ Cài đặt để biết đường nào đúng. */
+  FB_URL:        'https://thunghiem-eeb1f-default-rtdb.firebaseio.com',
+  FB_NODE:       'idecoChaoBan',
+  FB_REV:        '20260822-2',               // đổi FB_URL thì tăng số này, nếu không giá trị cũ trong máy sẽ đè lên
+  FB_SYNC_KEY:   true,                       // true = đồng bộ luôn khóa API cho máy khác dùng chung
+
+  /* ---- Nghiên cứu web: DEEPSEEK TỰ ĐIỀU KHIỂN ----
+     Model tự quyết định mở trang nào, đọc xong tự đánh giá còn thiếu gì rồi đi tiếp vòng sau. */
+  READER:        'https://r.jina.ai/',       // cổng đọc trang chính (dạng: gắn thẳng URL vào sau)
+  READER_ALT: [                              // cổng dự phòng khi cổng chính bị chặn/hết lượt
+    'https://api.allorigins.win/raw?url=',
+    'https://corsproxy.io/?url='
+  ],
+  SHOW_NOTICES:  false,                      // false = KHÔNG hiện thông báo kỹ thuật trong khung chat (chỉ ghi ra Console)
+  RESEARCH_MS:   110000,                     // TRẦN cho cả giai đoạn nghiên cứu — hết giờ là trả lời bằng những gì đã có
+  PLAN_MS:       45000,                      // hạn giờ mỗi lần model lập kế hoạch
+  PAGE_MS:       28000,                      // hạn giờ mỗi trang
+  ROUNDS:        3,                          // số vòng nghiên cứu tối đa (mỗi vòng model chọn trang rồi đọc)
+  OPEN_PER_ROUND:4,                          // số trang model được mở trong một vòng
+  PAGE_CHARS:    14000,                      // số ký tự tối đa lấy từ mỗi trang
+  ALLOW_ENGINE:  true,                       // cho model gọi công cụ tìm kiếm khi nó không tự nghĩ ra trang nào
+  SITE_HINTS: [                              // danh sách trang gợi ý cho model (sửa được trong ⚙ Cài đặt)
+    'moh.gov.vn — Bộ Y tế: thông tư, nghị định, quy chế dược',
+    'dav.gov.vn — Cục Quản lý Dược: số đăng ký, thu hồi, giá thuốc kê khai',
+    'drugbank.vn — tra cứu thuốc, hoạt chất, số đăng ký',
+    'thuvienphapluat.vn — toàn văn văn bản pháp luật',
+    'nhathuoclongchau.com.vn, pharmacity.vn, nhathuocankhang.com — giá bán lẻ thị trường',
+    'cafef.vn, vietstock.vn, vneconomy.vn — số liệu ngành, báo cáo doanh nghiệp',
+    'gso.gov.vn — Tổng cục Thống kê',
+    'vnexpress.net, tuoitre.vn, thanhnien.vn — tin tức phổ thông'
+  ].join('\n'),
+
+  /* ---- Phân tích tài liệu dài ---- */
+  BIG_DOC:       45000,                      // vượt ngưỡng này thì đọc theo từng đoạn rồi tổng hợp
+  CHUNK:         16000,                      // độ dài mỗi đoạn
+  MAX_CHUNKS:    10,                         // số đoạn tối đa xử lý
+
+  /* ---- Hạn giờ (ms) — mọi lệnh gọi mạng đều phải có hạn giờ ---- */
+  TIMEOUT_MS:    120000,
+  STALL_MS:      45000,
+  NET_MS:        45000,
+
+  HISTORY_TURNS: 12,
+  MAX_SESSIONS:  30,
+
+  WELCOME: 'Chào bạn, mình là trợ lý của IDECO.\nGửi câu hỏi, đính kèm PDF / Word / Excel / ảnh, hoặc bật 🌐 Nghiên cứu web để mình tự vào các trang chuyên ngành lấy dữ liệu.',
+
+  SYSTEM_PROMPT: [
+    'Bạn là trợ lý AI của công ty IDECO (phân phối dược phẩm và mỹ phẩm tại Việt Nam).',
+    'Luôn trả lời bằng tiếng Việt, xưng "mình", gọi người dùng là "bạn". Không dạ/thưa, không mào đầu dài dòng.',
+    'Đi thẳng vào câu trả lời. Ưu tiên số liệu, bước làm cụ thể, ví dụ thật.',
+    'Khi phân tích tài liệu người dùng gửi: bám sát dữ liệu trong tài liệu, nêu rõ con số và vị trí lấy ra; thiếu dữ kiện thì nói thẳng là thiếu, không suy đoán.',
+    'Khi trình bày dữ liệu so sánh, hãy dùng BẢNG Markdown chuẩn (có dòng gạch |---|) để người dùng tải được Excel.'
+  ].join('\n'),
+
+  PROMPT_DEEP: 'CHẾ ĐỘ PHÂN TÍCH SÂU: trình bày theo trình tự — (1) tóm tắt dữ kiện đọc được, (2) phân tích từng khía cạnh kèm số liệu, (3) rủi ro và điểm còn thiếu, (4) khuyến nghị hành động cụ thể. Dùng bảng khi so sánh.',
+
+  PROMPT_PLAN: [
+    'Bạn là bộ não điều phối việc NGHIÊN CỨU WEB. Nhiệm vụ: tự quyết định cần vào những trang nào để lấy đủ dữ liệu trả lời câu hỏi.',
+    'Bạn KHÔNG trả lời câu hỏi ở bước này. Bạn chỉ ra lệnh cho công cụ.',
+    '',
+    'Bạn có hai lệnh:',
+    '  {"loai":"mo","url":"https://…","vi_sao":"…"}      → mở một trang cụ thể và đọc toàn văn',
+    '  {"loai":"tim","tu_khoa":"…","vi_sao":"…"}          → nhờ công cụ tìm kiếm liệt kê trang (chỉ dùng khi bạn thật sự không nghĩ ra trang nào)',
+    '',
+    'ƯU TIÊN lệnh "mo": tự bạn suy ra địa chỉ trang chuyên ngành, kể cả đường dẫn tìm kiếm nội bộ của trang đó',
+    '(ví dụ https://drugbank.vn/tim-kiem?q=paracetamol, https://thuvienphapluat.vn/page/tim-van-ban.aspx?keyword=…).',
+    '',
+    'Trả lời DUY NHẤT bằng JSON, không kèm chữ nào khác, không dùng dấu ```:',
+    '{"suy_nghi":"nhận định ngắn về việc đang thiếu gì","hanh_dong":[…tối đa N lệnh…],"da_du":false}',
+    'Khi dữ liệu đã đủ để trả lời: {"suy_nghi":"…","hanh_dong":[],"da_du":true}',
+    'Trang vừa mở bị lỗi hoặc không có dữ liệu thì vòng sau hãy đổi sang trang khác, đừng mở lại trang đó.'
+  ].join('\n'),
+
+  PROMPT_SEARCH: [
+    'CHẾ ĐỘ NGHIÊN CỨU WEB. Phần NGUỒN bên dưới là nội dung các trang chính bạn đã chọn mở và đọc.',
+    'Chỉ trả lời dựa trên phần NGUỒN đó. TUYỆT ĐỐI không trả lời bằng trí nhớ sẵn có.',
+    'Mỗi ý lấy từ nguồn nào thì đánh số [1] [2] ngay sau ý đó, đúng theo số thứ tự nguồn.',
+    'Luôn nêu mốc thời gian của thông tin (ngày đăng, năm, quý) nếu trang có ghi.',
+    'Các nguồn mâu thuẫn nhau thì nói thẳng là mâu thuẫn và nêu rõ từng bên nói gì.',
+    'Nguồn không đủ để trả lời thì nói thẳng phần nào còn thiếu và gợi ý trang nên tra tiếp — không được bịa.'
+  ].join('\n')
+};
+
+/* ============================================================
+   TIỆN ÍCH CHUNG
+   ============================================================ */
+var LS = {
+  cfg:  CONFIG.ID + '-cfg',
+  font: CONFIG.ID + '-font',
+  sess: CONFIG.ID + '-sessions',
+  proj: CONFIG.ID + '-projects',
+  last: CONFIG.ID + '-last-session',
+  rd:   CONFIG.ID + '-reader-idx',
+  cur:  CONFIG.ID + '-cur-project',
+  fb:   CONFIG.ID + '-fb'
+};
+function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v === null ? d : v; }catch(e){ return d; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function nowStr(){ return new Date().toLocaleString('vi-VN'); }
+function today(){ var d = new Date(); return d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear(); }
+function bytes(n){ return n < 1024 ? n + ' B' : (n < 1048576 ? (n/1024).toFixed(1) + ' KB' : (n/1048576).toFixed(2) + ' MB'); }
+function uid(p){ return (p || 'x') + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+/* fetch có hạn giờ — không có cái này là treo vĩnh viễn khi máy chủ ngậm kết nối */
+function hfetch(url, opt, ms){
+  opt = opt || {};
+  var ac = new AbortController();
+  var t = setTimeout(function(){ ac.abort(); }, ms || CONFIG.TIMEOUT_MS);
+  opt.signal = ac.signal;
+  return fetch(url, opt).then(function(r){ clearTimeout(t); return r; },
+                              function(e){ clearTimeout(t); throw e; });
+}
+
+/* nạp thư viện ngoài theo chuỗi CDN dự phòng */
+var libCache = {};
+function loadScript(url){
+  return new Promise(function(res, rej){
+    var s = document.createElement('script');
+    s.src = url; s.async = true;
+    s.onload = function(){ res(true); };
+    s.onerror = function(){ rej(new Error('CDN lỗi: ' + url)); };
+    document.head.appendChild(s);
+  });
+}
+function needLib(name, test, urls){
+  if (test()) return Promise.resolve(true);
+  if (libCache[name]) return libCache[name];
+  libCache[name] = urls.reduce(function(chain, u){
+    return chain.catch(function(){ return loadScript(u).then(function(){ if (!test()) throw new Error('thiếu ' + name); }); });
+  }, Promise.reject());
+  return libCache[name];
+}
+var CDN = {
+  pdf:    ['https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js','https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js','https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js'],
+  pdfW:   ['https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js','https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js'],
+  mammoth:['https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js','https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js','https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js'],
+  xlsx:   ['https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js','https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js'],
+  jszip:  ['https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js','https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js','https://unpkg.com/jszip@3.10.1/dist/jszip.min.js']
+};
+function needPdf(){ return needLib('pdf', function(){ return !!window.pdfjsLib; }, CDN.pdf)
+  .then(function(){ try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc = CDN.pdfW[0]; }catch(e){} }); }
+function needMammoth(){ return needLib('mammoth', function(){ return !!window.mammoth; }, CDN.mammoth); }
+function needXlsx(){ return needLib('xlsx', function(){ return !!window.XLSX; }, CDN.xlsx); }
+function needZip(){ return needLib('jszip', function(){ return !!window.JSZip; }, CDN.jszip); }
+
+/* ============================================================
+   CẤU HÌNH + PROJECT
+   ============================================================ */
+var AI = {
+  base: CONFIG.API_BASE, key: CONFIG.API_KEY, model: CONFIG.MODEL,
+  temp: CONFIG.TEMPERATURE, maxTok: CONFIG.MAX_TOKENS,
+  sysPrompt: CONFIG.SYSTEM_PROMPT, sendImage: CONFIG.SEND_IMAGE,
+  fbUrl: CONFIG.FB_URL, fbNode: CONFIG.FB_NODE,
+  reader: CONFIG.READER, rounds: CONFIG.ROUNDS, openN: CONFIG.OPEN_PER_ROUND,
+  allowEngine: CONFIG.ALLOW_ENGINE, siteHints: CONFIG.SITE_HINTS
+};
+var projects = {};      // {id: {name, instruction, at, deleted}}
+var curProj = '';       // id project đang chọn ('' = không dùng project nào)
+
+function applyCfgObj(o){
+  if (!o) return;
+  ['base','key','model','sysPrompt','fbUrl','fbNode','reader','siteHints'].forEach(function(k){
+    if (typeof o[k] === 'string' && o[k].trim()) AI[k] = o[k].trim();
+  });
+  if (typeof o.temp === 'number') AI.temp = o.temp;
+  if (typeof o.maxTok === 'number') AI.maxTok = o.maxTok;
+  if (typeof o.rounds === 'number') AI.rounds = o.rounds;
+  if (typeof o.openN === 'number') AI.openN = o.openN;
+  if (typeof o.allowEngine === 'boolean') AI.allowEngine = o.allowEngine;
+  if (typeof o.sendImage === 'boolean') AI.sendImage = o.sendImage;
+}
+(function loadLocal(){
+  try{ applyCfgObj(JSON.parse(lsGet(LS.cfg, 'null'))); }catch(e){}
+  try{ projects = JSON.parse(lsGet(LS.proj, '{}')) || {}; }catch(e){ projects = {}; }
+  curProj = lsGet(LS.cur, '');
+  // Địa chỉ Firebase trong file mới phải THẮNG giá trị cũ đã lưu trong máy
+  if (lsGet(LS.fb, '') !== CONFIG.FB_REV){
+    AI.fbUrl = CONFIG.FB_URL; AI.fbNode = CONFIG.FB_NODE;
+    lsSet(LS.fb, CONFIG.FB_REV);
+    lsSet(LS.cfg, JSON.stringify(AI));
+  }
+})();
+function saveCfg(){ lsSet(LS.cfg, JSON.stringify(AI)); }
+function saveProjLocal(){ lsSet(LS.proj, JSON.stringify(projects)); lsSet(LS.cur, curProj); }
+function cleanKey(k){ return String(k || '').replace(/^\s*Bearer\s+/i,'').replace(/[\s'"\u200b-\u200f]/g,'').trim(); }
+function liveProjects(){
+  return Object.keys(projects).filter(function(id){ return projects[id] && !projects[id].deleted; })
+    .map(function(id){ var p = projects[id]; return {id:id, name:p.name || 'Project', instruction:p.instruction || '', at:p.at || ''}; })
+    .sort(function(a,b){ return (a.name || '').localeCompare(b.name || '', 'vi'); });
+}
+function projInstruction(){
+  var p = projects[curProj];
+  return (p && !p.deleted && p.instruction) ? p.instruction : '';
+}
+
+/* ============================================================
+   FIREBASE REALTIME DATABASE — gọi thẳng qua REST, không cần SDK
+   ============================================================ */
+function fbBase(){ return String(AI.fbUrl || '').trim().replace(/\/+$/,''); }
+function fbPath(sub){ return fbBase() + '/' + (AI.fbNode || CONFIG.FB_NODE) + (sub || '') + '.json'; }
+function fbOn(){ return /^https?:\/\/.+/.test(fbBase()); }
+
+function fbGet(sub){
+  if (!fbOn()) return Promise.reject(new Error('Chưa khai địa chỉ Firebase'));
+  return hfetch(fbPath(sub), {method:'GET'}, CONFIG.NET_MS).then(function(r){
+    return r.text().then(function(t){
+      if (!r.ok) throw new Error('Firebase HTTP ' + r.status + ' — ' + t.slice(0,200));
+      try{ return JSON.parse(t); }catch(e){ return null; }
+    });
+  });
+}
+function fbWrite(sub, data, method){
+  if (!fbOn()) return Promise.reject(new Error('Chưa khai địa chỉ Firebase'));
+  return hfetch(fbPath(sub), {
+    method: method || 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  }, CONFIG.NET_MS).then(function(r){
+    return r.text().then(function(t){
+      if (!r.ok) throw new Error('Firebase HTTP ' + r.status + ' — ' + t.slice(0,200));
+      return true;
+    });
+  });
+}
+
+/* kéo cấu hình + project từ Firebase xuống */
+function fbPull(){
+  return fbGet('').then(function(data){
+    if (!data) return {cfg:false, proj:0};
+    var got = {cfg:false, proj:0};
+    if (data.config){
+      var c = data.config;
+      if (!CONFIG.FB_SYNC_KEY) delete c.key;
+      // KHÔNG để cấu hình từ máy chủ đè lên ô người dùng đang sửa
+      if (!state.setTouched){ applyCfgObj(c); saveCfg(); got.cfg = true; }
+    }
+    if (data.projects && typeof data.projects === 'object'){
+      Object.keys(data.projects).forEach(function(id){
+        var remote = data.projects[id], local = projects[id];
+        if (!remote) return;
+        // bản nào mới hơn thì thắng — dấu đã-xóa cũng là một bản ghi có mốc thời gian
+        if (!local || (remote.ts || 0) >= (local.ts || 0)) projects[id] = remote;
+      });
+      saveProjLocal();
+      got.proj = liveProjects().length;
+    }
+    if (curProj && (!projects[curProj] || projects[curProj].deleted)) { curProj = ''; saveProjLocal(); }
+    return got;
+  });
+}
+function fbPushConfig(){
+  var c = {base:AI.base, model:AI.model, temp:AI.temp, maxTok:AI.maxTok, sysPrompt:AI.sysPrompt,
+           sendImage:AI.sendImage, reader:AI.reader, rounds:AI.rounds, openN:AI.openN,
+           allowEngine:AI.allowEngine, siteHints:AI.siteHints, ts:Date.now()};
+  if (CONFIG.FB_SYNC_KEY) c.key = AI.key;
+  return fbWrite('/config', c, 'PATCH');
+}
+function fbPushProject(id){
+  var p = projects[id]; if (!p) return Promise.resolve(true);
+  return fbWrite('/projects/' + id, p, 'PUT');   // PUT để dấu đã-xóa ghi đè hẳn, không bị hồi sinh
+}
+
+/* ============================================================
+   GIAO DIỆN — SHADOW DOM
+   ============================================================ */
+var CSS = `
+:host{all:initial}
+*,*::before,*::after{box-sizing:border-box}
+.root{
+  --red:#ee3a23; --red-d:#c72a15; --grn:#15803d;
+  --ink:#14181f; --ink2:#5a6472; --line:#e3e6ec; --bg:#ffffff; --soft:#f4f6f9;
+  --cfs:${CONFIG.CHAT_FONT_PX}px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+.launch{
+  position:fixed; bottom:${CONFIG.OFFSET_Y}px; ${CONFIG.SIDE}:${CONFIG.OFFSET_X}px;
+  z-index:2147483646; display:flex; align-items:center; gap:10px;
+  padding:10px 18px 10px 10px; border-radius:999px;
+  background:linear-gradient(135deg,var(--red),var(--red-d));
+  box-shadow:0 10px 26px rgba(199,42,21,.36), 0 2px 6px rgba(0,0,0,.14);
+  color:#fff; transition:transform .18s ease, box-shadow .18s ease;
+}
+.launch:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(199,42,21,.44)}
+.launch .av{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--red);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;overflow:hidden;flex:0 0 auto}
+.launch .av img{width:100%;height:100%;object-fit:contain}
+.launch .lb{display:flex;flex-direction:column;line-height:1.15;text-align:left}
+.launch .lb b{font-size:15px;font-weight:700}
+.launch .lb span{font-size:11px;opacity:.86;letter-spacing:1.2px;text-transform:uppercase}
+.launch .dot{position:absolute;top:8px;${CONFIG.SIDE}:12px;width:9px;height:9px;border-radius:50%;background:#37d67a;box-shadow:0 0 0 2px #fff}
+.launch[hidden]{display:none}
+
+.panel{
+  position:fixed; bottom:${CONFIG.PANEL_LIFT}px; ${CONFIG.SIDE}:${CONFIG.OFFSET_X}px;
+  z-index:2147483647; width:${CONFIG.PANEL_WIDTH}px; height:${CONFIG.PANEL_HEIGHT}px;
+  max-width:calc(100vw - 32px); max-height:${CONFIG.PANEL_MAXVH}vh;
+  background:var(--bg); border-radius:18px; border:1px solid var(--line);
+  box-shadow:0 24px 70px rgba(16,20,28,.28); display:none; flex-direction:column; overflow:hidden;
+  animation:pop .18s ease-out;
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.panel{animation:none}.launch{transition:none}}
+.panel.open{display:flex}
+.panel.full{inset:0;width:100vw;height:100vh;max-width:100vw;max-height:100vh;border-radius:0;border:0}
+@media(max-width:620px){ .panel{inset:0;width:100vw;height:100vh;max-width:100vw;max-height:100vh;border-radius:0} }
+
+.hd{display:flex;align-items:center;gap:8px;padding:11px 12px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;flex:0 0 auto}
+.hd .av{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden;flex:0 0 auto}
+.hd .av img{width:100%;height:100%;object-fit:contain}
+.hd .ti{flex:1;min-width:0}
+.hd .ti b{display:block;font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd .ti i{font-style:normal;font-size:11px;opacity:.85;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbtn{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;background:rgba(255,255,255,.16);flex:0 0 auto}
+.hbtn:hover{background:rgba(255,255,255,.28)}
+
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line);background:var(--soft);flex:0 0 auto}
+.chip{font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink2);font-weight:600}
+.chip:hover{border-color:var(--red);color:var(--red)}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff}
+.chip.tool{background:#fff;border-color:#cfd6e0;color:var(--ink2)}
+.chip.tool:hover{background:#eef2f7;border-color:var(--grn);color:var(--grn)}
+.psel{font-size:12px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink2);
+      font-family:inherit;font-weight:600;max-width:150px}
+.psel.on{border-color:var(--grn);color:var(--grn)}
+.bar .sp{flex:1}
+
+.body{flex:1;overflow-y:auto;padding:14px 12px;background:var(--soft);scroll-behavior:smooth}
+.msg{max-width:88%;margin:0 0 12px;padding:10px 13px;border-radius:14px;font-size:var(--cfs);line-height:1.66;word-wrap:break-word;overflow-wrap:anywhere}
+.msg.me{margin-left:auto;background:var(--red);color:#fff;border-bottom-right-radius:5px;white-space:pre-wrap}
+.msg.ai{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
+.msg.sys{max-width:100%;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:calc(var(--cfs) - 2.5px);text-align:center}
+.msg.err{max-width:100%;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:calc(var(--cfs) - 2px);white-space:pre-wrap}
+.msg p{margin:0 0 8px}.msg p:last-child{margin-bottom:0}
+.msg ul,.msg ol{margin:6px 0 8px;padding-left:22px}
+.msg li{margin:3px 0}
+.msg h3{margin:10px 0 6px;font-size:calc(var(--cfs) + 1px)}
+.msg code{background:rgba(0,0,0,.06);padding:1px 5px;border-radius:5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:calc(var(--cfs) - 2px)}
+.msg pre{background:#111827;color:#e5e7eb;padding:11px 12px;border-radius:10px;overflow-x:auto;margin:8px 0}
+.msg pre code{background:none;color:inherit;padding:0}
+.think{font-size:calc(var(--cfs) - 3px);color:#6b7280;border-left:3px solid #d1d5db;padding:2px 0 2px 9px;margin:0 0 8px;white-space:pre-wrap}
+.srcbox{margin:9px 0 0;border-top:1px dashed var(--line);padding-top:8px}
+.srcbox b{display:block;font-size:calc(var(--cfs) - 3px);color:var(--ink2);margin:0 0 5px}
+.srcbox a{display:block;font-size:calc(var(--cfs) - 3px);color:#1d4ed8;text-decoration:none;margin:0 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srcbox a:hover{text-decoration:underline}
+.tbwrap{overflow-x:auto;margin:8px 0;border:1px solid var(--line);border-radius:10px}
+.tbwrap table{border-collapse:collapse;width:100%;font-size:calc(var(--cfs) - 2px)}
+.tbwrap th,.tbwrap td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+.tbwrap th{background:#f1f3f7;font-weight:700}
+.tbwrap tr:last-child td{border-bottom:0}
+.tbwrap th:last-child,.tbwrap td:last-child{border-right:0}
+.tbtools{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.tbtools button{font-size:11.5px;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:#fff;color:var(--ink2);font-weight:600}
+.tbtools button:hover{border-color:var(--red);color:var(--red)}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing i{width:6px;height:6px;border-radius:50%;background:#9aa3b0;animation:bl 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,80%{opacity:.28}40%{opacity:1}}
+
+.files{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px}
+.files:empty{display:none}
+.fchip{display:flex;align-items:center;gap:6px;max-width:100%;padding:5px 8px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:12px}
+.fchip img{width:26px;height:26px;object-fit:cover;border-radius:5px}
+.fchip b{font-weight:600;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fchip i{font-style:normal;color:#8b94a3}
+.fchip button{color:#b91c1c;font-size:14px;line-height:1;padding:0 2px}
+
+.comp{border-top:1px solid var(--line);background:#fff;padding:9px 10px 10px;flex:0 0 auto}
+.crow{display:flex;align-items:flex-end;gap:7px}
+.iconb{width:36px;height:36px;border-radius:10px;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+.iconb:hover{border-color:var(--red)}
+.ta{flex:1;min-height:38px;max-height:132px;resize:none;padding:9px 11px;border-radius:11px;border:1px solid var(--line);
+    font-family:inherit;font-size:calc(var(--cfs) - 1px);line-height:1.5;color:var(--ink);background:#fff}
+.send{width:40px;height:38px;border-radius:11px;background:var(--red);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.send:hover{background:var(--red-d)}
+.send:disabled{background:#c9ced8;cursor:not-allowed}
+.hint{font-size:11px;color:#98a1af;margin:6px 2px 0}
+
+.ov{position:absolute;inset:0;background:#fff;z-index:5;display:none;flex-direction:column}
+.ov.open{display:flex}
+.ovhd{display:flex;align-items:center;gap:8px;padding:11px 12px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.ovhd b{flex:1;font-size:14.5px}
+.ovhd button{font-size:18px;color:var(--ink2);padding:2px 6px}
+.ovbd{flex:1;overflow-y:auto;padding:14px 13px}
+.sec{font-size:11.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--grn);
+     border-bottom:1px solid var(--line);padding:0 0 6px;margin:22px 0 13px}
+.sec:first-child{margin-top:0}
+.fld{margin:0 0 13px}
+.fld label{display:block;font-size:12px;font-weight:700;color:var(--ink2);margin:0 0 5px}
+.fld input,.fld textarea,.fld select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff}
+.fld textarea{min-height:110px;resize:vertical;line-height:1.55}
+.fld .tip{font-size:11.5px;color:#98a1af;margin:5px 0 0;line-height:1.5}
+.row2{display:flex;gap:10px}.row2>*{flex:1}
+.sw{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink)}
+.sw input{width:auto}
+.btn{padding:9px 14px;border-radius:10px;background:var(--red);color:#fff;font-weight:700;font-size:13.5px}
+.btn:hover{background:var(--red-d)}
+.btn.gh{background:#fff;color:var(--ink2);border:1px solid var(--line)}
+.btn.gh:hover{border-color:var(--red);color:var(--red)}
+.btn.gr{background:var(--grn)}
+.btn.gr:hover{background:#0b5227}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.sitem{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin:0 0 7px;background:#fff}
+.sitem.cur{border-color:var(--grn);background:#f2fbf5}
+.sitem .st{flex:1;min-width:0}
+.sitem .st b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sitem .st i{font-style:normal;font-size:11px;color:#98a1af;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sitem button{font-size:12px;padding:5px 9px;border:1px solid var(--line);border-radius:8px;color:var(--ink2);white-space:nowrap}
+.sitem button:hover{border-color:var(--red);color:var(--red)}
+.fbst{font-size:11.5px;padding:7px 10px;border-radius:9px;background:var(--soft);color:var(--ink2);margin:0 0 13px;line-height:1.5}
+.empty{text-align:center;color:#98a1af;font-size:13px;padding:30px 10px}
+`;
+
+var host, root, el = {};
+var state = {
+  open:false, full:false, busy:false, mode:'chat', setTouched:false,
+  files:[], msgs:[], curSess:null, editProj:null
+};
+
+function h(tag, cls, html){
+  var d = document.createElement(tag);
+  if (cls) d.className = cls;
+  if (html != null) d.innerHTML = html;
+  return d;
+}
+
+function build(){
+  host = document.createElement('div');
+  host.id = CONFIG.ID + '-host';
+  root = host.attachShadow({mode:'open'});
+  var st = document.createElement('style'); st.textContent = CSS; root.appendChild(st);
+  var wrap = h('div','root'); root.appendChild(wrap);
+
+  var avatar = CONFIG.LOGO_URL ? '<img src="' + esc(CONFIG.LOGO_URL) + '" alt="">' : 'ID';
+
+  var launch = h('button','launch');
+  launch.type = 'button';
+  launch.setAttribute('aria-label','Mở khung chat ' + CONFIG.BOT_NAME);
+  launch.innerHTML = '<span class="dot"></span><span class="av">' + avatar + '</span>' +
+    '<span class="lb"><b>' + esc(CONFIG.LAUNCH_TEXT) + '</b><span>' + esc(CONFIG.BRAND) + '</span></span>';
+  wrap.appendChild(launch);
+
+  var panel = h('div','panel');
+  panel.setAttribute('role','dialog');
+  panel.setAttribute('aria-label',CONFIG.BOT_NAME);
+  panel.innerHTML =
+    '<div class="hd">' +
+      '<span class="av">' + avatar + '</span>' +
+      '<span class="ti"><b>' + esc(CONFIG.BOT_NAME) + '</b><i data-sub>Sẵn sàng</i></span>' +
+      '<button class="hbtn" data-a="new"  title="Cuộc trò chuyện mới">⟳</button>' +
+      '<button class="hbtn" data-a="hist" title="Lịch sử trò chuyện">🕘</button>' +
+      '<button class="hbtn" data-a="set"  title="Cài đặt">⚙</button>' +
+      '<button class="hbtn" data-a="full" title="Phóng to toàn màn hình">⛶</button>' +
+      '<button class="hbtn" data-a="close" title="Đóng">✕</button>' +
+    '</div>' +
+    '<div class="bar">' +
+      '<button class="chip on" data-mode="chat">💬 Trò chuyện</button>' +
+      '<button class="chip" data-mode="deep">🔬 Phân tích sâu</button>' +
+      '<button class="chip" data-mode="web">🌐 Nghiên cứu web</button>' +
+      '<select class="psel" data-psel title="Chọn project — AI sẽ làm theo chỉ dẫn của project đó"></select>' +
+      '<span class="sp"></span>' +
+      '<button class="chip tool" data-a="full" data-fulllabel>⛶ Phóng to</button>' +
+      '<button class="chip tool" data-a="hist" title="Lịch sử trò chuyện">🕘 Lịch sử</button>' +
+      '<button class="chip tool" data-a="fsmall" title="Giảm cỡ chữ">A−</button>' +
+      '<button class="chip tool" data-a="fbig" title="Tăng cỡ chữ">A+</button>' +
+    '</div>' +
+    '<div class="body" data-body></div>' +
+    '<div class="files" data-files></div>' +
+    '<div class="comp">' +
+      '<div class="crow">' +
+        '<button class="iconb" data-a="pick-file" title="Đính kèm tài liệu (PDF, Word, Excel, PowerPoint…)">📎</button>' +
+        '<button class="iconb" data-a="pick-img" title="Đính kèm ảnh">🖼</button>' +
+        '<textarea class="ta" data-ta rows="1" placeholder="Nhập câu hỏi… (Enter gửi, Shift+Enter xuống dòng)"></textarea>' +
+        '<button class="send" data-a="send" title="Gửi">➤</button>' +
+      '</div>' +
+      '<div class="hint" data-hint>Dán ảnh bằng Ctrl+V. Dán đường link vào ô chat để trợ lý mở trang đó ra đọc.</div>' +
+    '</div>' +
+
+    /* ---------- Bảng Cài đặt ---------- */
+    '<div class="ov" data-ov-set>' +
+      '<div class="ovhd"><b>⚙ Cài đặt</b><button data-a="close-ov">✕</button></div>' +
+      '<div class="ovbd">' +
+        '<div class="fbst" data-fbst>Firebase: chưa kết nối</div>' +
+
+        '<div class="sec">Project — chỉ dẫn riêng cho AI</div>' +
+        '<div data-plist></div>' +
+        '<div class="fld"><label>Tên project</label><input data-f="pname" placeholder="Ví dụ: Tư vấn nhà thuốc"></div>' +
+        '<div class="fld"><label>Chỉ dẫn cho AI khi dùng project này</label>' +
+          '<textarea data-f="pinst" placeholder="Ví dụ: Bạn là chuyên viên tư vấn bán hàng cho nhà thuốc. Luôn nêu giá bán lẻ đề xuất, chiết khấu theo bậc và điều kiện thanh toán. Không hứa quá 60 ngày công nợ."></textarea>' +
+          '<p class="tip">Đoạn này được ghép vào chỉ dẫn chung mỗi khi project được chọn. Viết càng cụ thể, AI trả lời càng đúng ý.</p></div>' +
+        '<div class="acts">' +
+          '<button class="btn gr" data-a="proj-save">💾 Lưu project</button>' +
+          '<button class="btn gh" data-a="proj-clear">＋ Soạn project mới</button>' +
+        '</div>' +
+
+        '<div class="sec">Kết nối AI</div>' +
+        '<div class="fld"><label>Địa chỉ API (gốc)</label><input data-f="base" placeholder="https://api.b.ai/v1">' +
+          '<p class="tip">Nếu trình duyệt báo lỗi CORS, dựng Cloudflare Worker làm cầu nối rồi dán địa chỉ Worker vào đây.</p></div>' +
+        '<div class="fld"><label>Khóa API</label><input data-f="key" type="password" autocomplete="off"></div>' +
+        '<div class="fld"><label>Model</label><input data-f="model" placeholder="deepseek-v4-flash">' +
+          '<p class="tip">Model báo không tồn tại thì tự thử: ' + esc(CONFIG.MODEL_CHAIN.join(' → ')) + '</p></div>' +
+        '<div class="row2">' +
+          '<div class="fld"><label>Độ sáng tạo (0–2)</label><input data-f="temp" type="number" min="0" max="2" step="0.1"></div>' +
+          '<div class="fld"><label>Độ dài tối đa</label><input data-f="maxTok" type="number" min="256" max="32000" step="256"></div>' +
+        '</div>' +
+        '<div class="fld"><label class="sw"><input data-f="sendImage" type="checkbox"> Gửi thẳng ảnh cho model (chỉ bật khi model có thị giác)</label></div>' +
+        '<div class="fld"><label>Chỉ dẫn chung cho trợ lý</label><textarea data-f="sysPrompt"></textarea></div>' +
+
+        '<div class="sec">Nghiên cứu web (model tự điều khiển)</div>' +
+        '<div class="fld"><label>Cổng đọc trang (chính)</label><input data-f="reader" placeholder="https://r.jina.ai/">' +
+          '<p class="tip">Cổng tải nội dung trang về cho trình duyệt. Cổng chính hỏng thì widget tự thử 2 cổng dự phòng. Bấm nút bên dưới để xem cổng nào đang chạy được.</p></div>' +
+        '<div class="acts" style="margin-bottom:13px"><button class="btn gh" data-a="test-reader">🔌 Kiểm tra cổng đọc trang</button></div>' +
+        '<div class="row2">' +
+          '<div class="fld"><label>Số vòng nghiên cứu</label><input data-f="rounds" type="number" min="1" max="5" step="1"></div>' +
+          '<div class="fld"><label>Số trang mỗi vòng</label><input data-f="openN" type="number" min="1" max="6" step="1"></div>' +
+        '</div>' +
+        '<div class="fld"><label class="sw"><input data-f="allowEngine" type="checkbox"> Cho phép model nhờ công cụ tìm kiếm khi bí</label>' +
+          '<p class="tip">Tắt mục này thì model chỉ được mở những trang do chính nó suy ra — không đi qua công cụ tìm kiếm nào.</p></div>' +
+        '<div class="fld"><label>Trang gợi ý cho model</label><textarea data-f="siteHints"></textarea>' +
+          '<p class="tip">Mỗi dòng một trang kèm mô tả ngắn. Đây chỉ là gợi ý — model vẫn tự quyết định vào trang nào, kể cả trang không có trong danh sách.</p></div>' +
+
+        '<div class="sec">Đồng bộ Firebase</div>' +
+        '<div class="fld"><label>Đường dẫn Realtime Database</label><input data-f="fbUrl" placeholder="https://ten-db-default-rtdb.firebaseio.com">' +
+          '<p class="tip">Chép đúng đường dẫn hiện ở Firebase Console → Realtime Database. Vùng châu Á có dạng …-default-rtdb.asia-southeast1.firebasedatabase.app</p></div>' +
+        '<div class="fld"><label>Nhánh lưu dữ liệu</label><input data-f="fbNode" placeholder="idecoChaoBan"></div>' +
+        '<div class="acts">' +
+          '<button class="btn gr" data-a="fb-push">⬆ Đưa lên Firebase</button>' +
+          '<button class="btn gh" data-a="fb-pull">⬇ Lấy về từ Firebase</button>' +
+          '<button class="btn gh" data-a="fb-test">🔌 Kiểm tra Firebase</button>' +
+        '</div>' +
+
+        '<div class="sec">Lưu &amp; kiểm tra</div>' +
+        '<div class="acts">' +
+          '<button class="btn" data-a="save-set">💾 Lưu cài đặt</button>' +
+          '<button class="btn gh" data-a="test">🩺 Kiểm tra kết nối AI</button>' +
+          '<button class="btn gh" data-a="reset-set">↺ Về mặc định</button>' +
+        '</div>' +
+        '<p class="tip" style="margin-top:14px">Bản dựng: ' + esc(CONFIG.BUILD_REV) + '</p>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="ov" data-ov-hist>' +
+      '<div class="ovhd"><b>🕘 Lịch sử trò chuyện</b><button data-a="close-ov">✕</button></div>' +
+      '<div class="ovbd" data-hist-body></div>' +
+    '</div>';
+  wrap.appendChild(panel);
+
+  var fileIn = document.createElement('input');
+  fileIn.type = 'file'; fileIn.multiple = true; fileIn.style.display = 'none';
+  fileIn.accept = '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.md,.json,.html,.js,.py,.sql,.log,.pptx';
+  var imgIn = document.createElement('input');
+  imgIn.type = 'file'; imgIn.multiple = true; imgIn.accept = 'image/*'; imgIn.style.display = 'none';
+  wrap.appendChild(fileIn); wrap.appendChild(imgIn);
+
+  el = {
+    wrap:wrap, launch:launch, panel:panel,
+    body: panel.querySelector('[data-body]'),
+    files: panel.querySelector('[data-files]'),
+    ta: panel.querySelector('[data-ta]'),
+    sub: panel.querySelector('[data-sub]'),
+    hint: panel.querySelector('[data-hint]'),
+    psel: panel.querySelector('[data-psel]'),
+    ovSet: panel.querySelector('[data-ov-set]'),
+    ovHist: panel.querySelector('[data-ov-hist]'),
+    histBody: panel.querySelector('[data-hist-body]'),
+    plist: panel.querySelector('[data-plist]'),
+    fbst: panel.querySelector('[data-fbst]'),
+    fileIn:fileIn, imgIn:imgIn
+  };
+
+  bind();
+  renderProjSelect();
+  applyFont(parseFloat(lsGet(LS.font, CONFIG.CHAT_FONT_PX)) || CONFIG.CHAT_FONT_PX);
+  document.body.appendChild(host);              // gắn ĐÚNG MỘT LẦN, không quan sát DOM
+  console.log('[' + CONFIG.ID + '] build ' + CONFIG.BUILD_REV + ' · ' + AI.model + ' · ' + AI.base);
+
+  if (fbOn()){
+    fbPull().then(function(g){
+      setFbStatus('✅ Đã đồng bộ Firebase' + (g.proj ? ' · ' + g.proj + ' project' : '') + ' · ' + nowStr());
+      renderProjSelect();
+    }).catch(function(e){
+      setFbStatus('⚠️ Chưa kết nối được Firebase: ' + (e.message || e));
+    });
+  }
+}
+function setFbStatus(t){ if (el.fbst) el.fbst.textContent = t; }
+
+/* ============================================================
+   SỰ KIỆN
+   ============================================================ */
+function bind(){
+  el.launch.addEventListener('click', openPanel);
+  window.addEventListener('ideco-chat-open', openPanel);       // nút trên trang chủ gọi vào
+
+  el.psel.addEventListener('change', function(){
+    curProj = el.psel.value; saveProjLocal(); renderProjSelect();
+    var p = projects[curProj];
+    addMsg('sys', p ? 'Đang dùng project: ' + p.name : 'Đã tắt project — AI dùng chỉ dẫn chung.');
+  });
+
+  el.panel.addEventListener('click', function(ev){
+    var mb = ev.target.closest('[data-mode]');
+    if (mb){
+      el.panel.querySelectorAll('[data-mode]').forEach(function(b){ b.classList.toggle('on', b === mb); });
+      state.mode = mb.getAttribute('data-mode');
+      el.hint.textContent =
+        state.mode === 'deep' ? 'Phân tích sâu: tóm tắt dữ kiện → phân tích → rủi ro → khuyến nghị. Chậm hơn một chút.' :
+        state.mode === 'web'  ? 'Nghiên cứu web: model tự chọn trang, đọc tối đa ' + (AI.rounds * AI.openN) + ' trang qua ' + AI.rounds + ' vòng, trả lời có đánh số nguồn.' :
+        'Dán ảnh bằng Ctrl+V. Dán đường link vào ô chat để trợ lý mở trang đó ra đọc.';
+      return;
+    }
+    var b = ev.target.closest('[data-a]');
+    if (!b) return;
+    var a = b.getAttribute('data-a');
+    if (a === 'close')      closePanel();
+    else if (a === 'full')  toggleFull();
+    else if (a === 'send')  send();
+    else if (a === 'new')   newChat();
+    else if (a === 'set')   openSettings();
+    else if (a === 'hist')  openHistory();
+    else if (a === 'close-ov'){ el.ovSet.classList.remove('open'); el.ovHist.classList.remove('open'); state.setTouched = false; }
+    else if (a === 'save-set')   saveSettings();
+    else if (a === 'reset-set')  resetSettings();
+    else if (a === 'test')       testConnection();
+    else if (a === 'test-reader') testReader();
+    else if (a === 'proj-save')  saveProject();
+    else if (a === 'proj-clear') clearProjectForm();
+    else if (a === 'fb-push')    fbPushAll();
+    else if (a === 'fb-pull')    fbPullNow();
+    else if (a === 'fb-test')    fbTest();
+    else if (a === 'pick-file')  el.fileIn.click();
+    else if (a === 'pick-img')   el.imgIn.click();
+    else if (a === 'fbig')   applyFont(curFont() + 1);
+    else if (a === 'fsmall') applyFont(curFont() - 1);
+  });
+
+  el.ovSet.addEventListener('input', function(){ state.setTouched = true; });
+
+  el.ta.addEventListener('keydown', function(ev){
+    if (ev.key === 'Enter' && !ev.shiftKey){ ev.preventDefault(); send(); }
+  });
+  el.ta.addEventListener('input', function(){
+    el.ta.style.height = 'auto';
+    el.ta.style.height = Math.min(el.ta.scrollHeight, 132) + 'px';
+  });
+  el.ta.addEventListener('paste', function(ev){
+    var items = (ev.clipboardData || {}).items || [];
+    for (var i = 0; i < items.length; i++){
+      if (items[i].type && items[i].type.indexOf('image/') === 0){
+        var f = items[i].getAsFile();
+        if (f){ ev.preventDefault(); addFiles([f]); }
+      }
+    }
+  });
+
+  el.fileIn.addEventListener('change', function(){ addFiles(Array.prototype.slice.call(el.fileIn.files)); el.fileIn.value = ''; });
+  el.imgIn.addEventListener('change',  function(){ addFiles(Array.prototype.slice.call(el.imgIn.files));  el.imgIn.value  = ''; });
+  el.body.addEventListener('dragover', function(ev){ ev.preventDefault(); });
+  el.body.addEventListener('drop', function(ev){
+    ev.preventDefault();
+    if (ev.dataTransfer && ev.dataTransfer.files.length) addFiles(Array.prototype.slice.call(ev.dataTransfer.files));
+  });
+
+  document.addEventListener('keydown', function(ev){
+    if (ev.key === 'Escape' && state.open){
+      if (el.ovSet.classList.contains('open') || el.ovHist.classList.contains('open')){
+        el.ovSet.classList.remove('open'); el.ovHist.classList.remove('open'); state.setTouched = false;
+      } else if (state.full) toggleFull();
+      else closePanel();
+    }
+  });
+}
+
+function curFont(){ return parseFloat(lsGet(LS.font, CONFIG.CHAT_FONT_PX)) || CONFIG.CHAT_FONT_PX; }
+function applyFont(px){
+  px = Math.max(13, Math.min(30, px));
+  el.panel.style.setProperty('--cfs', px + 'px');
+  lsSet(LS.font, String(px));
+}
+function openPanel(){
+  state.open = true;
+  el.panel.classList.add('open');
+  el.launch.hidden = true;
+  if (!state.msgs.length && !el.body.children.length){
+    if (!restoreLast()) addMsg('ai', CONFIG.WELCOME);
+  }
+  setTimeout(function(){ el.ta.focus(); }, 60);
+}
+function closePanel(){
+  state.open = false;
+  el.panel.classList.remove('open');
+  el.ovSet.classList.remove('open'); el.ovHist.classList.remove('open');
+  state.setTouched = false;
+  el.launch.hidden = false;
+  saveSession();
+}
+function toggleFull(){
+  state.full = !state.full;
+  el.panel.classList.toggle('full', state.full);
+  // có 2 nút cùng làm việc này: nút trên thanh tiêu đề và nút trên thanh chế độ
+  el.panel.querySelectorAll('[data-a="full"]').forEach(function(b){
+    var isLabel = b.hasAttribute('data-fulllabel');
+    b.textContent = state.full ? (isLabel ? '⤡ Thu nhỏ' : '⤡') : (isLabel ? '⛶ Phóng to' : '⛶');
+    b.title = state.full ? 'Thu nhỏ khung chat' : 'Phóng to toàn màn hình';
+  });
+}
+
+/* ============================================================
+   PROJECT
+   ============================================================ */
+function renderProjSelect(){
+  var list = liveProjects();
+  el.psel.innerHTML = '<option value="">📁 Không dùng project</option>' +
+    list.map(function(p){ return '<option value="' + esc(p.id) + '">📁 ' + esc(p.name) + '</option>'; }).join('');
+  if (curProj && !projects[curProj]) curProj = '';
+  el.psel.value = curProj || '';
+  el.psel.classList.toggle('on', !!curProj);
+  el.sub.textContent = curProj && projects[curProj] ? 'Project: ' + projects[curProj].name : 'Sẵn sàng';
+}
+function renderProjList(){
+  var list = liveProjects();
+  el.plist.innerHTML = '';
+  if (!list.length){ el.plist.appendChild(h('div','empty','Chưa có project nào. Điền tên + chỉ dẫn bên dưới rồi bấm Lưu project.')); return; }
+  list.forEach(function(p){
+    var it = h('div','sitem' + (p.id === curProj ? ' cur' : ''));
+    it.innerHTML = '<span class="st"><b>' + esc(p.name) + '</b><i>' + esc((p.instruction || '').slice(0, 70) || 'chưa có chỉ dẫn') + '</i></span>';
+    var bUse = h('button', null, p.id === curProj ? '✓ Đang dùng' : 'Dùng');
+    var bEd  = h('button', null, '✏');
+    var bDel = h('button', null, '🗑');
+    bUse.addEventListener('click', function(){ curProj = p.id; saveProjLocal(); renderProjSelect(); renderProjList(); });
+    bEd.addEventListener('click', function(){
+      state.editProj = p.id;
+      f('pname').value = p.name; f('pinst').value = p.instruction;
+      f('pname').focus();
+    });
+    bDel.addEventListener('click', function(){
+      // dấu đã-xóa có mốc thời gian, không xóa trắng — nếu không project sẽ hồi sinh khi máy khác đồng bộ lên
+      projects[p.id] = {name:p.name, instruction:'', deleted:true, ts:Date.now()};
+      if (curProj === p.id) curProj = '';
+      if (state.editProj === p.id){ state.editProj = null; clearProjectForm(); }
+      saveProjLocal(); renderProjList(); renderProjSelect();
+      if (fbOn()) fbPushProject(p.id).catch(function(e){ setFbStatus('⚠️ Xóa chưa lên được Firebase: ' + (e.message || e)); });
+    });
+    it.appendChild(bUse); it.appendChild(bEd); it.appendChild(bDel);
+    el.plist.appendChild(it);
+  });
+}
+function clearProjectForm(){ state.editProj = null; f('pname').value = ''; f('pinst').value = ''; f('pname').focus(); }
+function saveProject(){
+  var name = (f('pname').value || '').trim();
+  var inst = (f('pinst').value || '').trim();
+  if (!name){ setFbStatus('⚠️ Chưa đặt tên project.'); f('pname').focus(); return; }
+  var id = state.editProj || uid('p');
+  projects[id] = {name:name, instruction:inst, at:nowStr(), ts:Date.now()};
+  curProj = id;
+  state.editProj = null;
+  saveProjLocal(); renderProjList(); renderProjSelect(); clearProjectForm();
+  setFbStatus('💾 Đã lưu project "' + name + '" trong máy. Đang đưa lên Firebase…');
+  if (fbOn()){
+    fbPushProject(id)
+      .then(function(){ setFbStatus('✅ Project "' + name + '" đã lên Firebase — máy khác lấy về được.'); })
+      .catch(function(e){ setFbStatus('⚠️ Đã lưu trong máy nhưng chưa lên Firebase: ' + (e.message || e)); });
+  } else {
+    setFbStatus('💾 Đã lưu trong máy. Khai đường dẫn Firebase để chia sẻ cho máy khác.');
+  }
+}
+
+/* ============================================================
+   ĐỌC FILE ĐÍNH KÈM
+   ============================================================ */
+function readAs(f, how, enc){
+  return new Promise(function(res, rej){
+    var r = new FileReader();
+    r.onload = function(){ res(r.result); };
+    r.onerror = function(){ rej(new Error('Không đọc được ' + f.name)); };
+    if (how === 'text') r.readAsText(f, enc || 'utf-8');
+    else if (how === 'buf') r.readAsArrayBuffer(f);
+    else r.readAsDataURL(f);
+  });
+}
+function extractPdf(f){
+  return needPdf().then(function(){ return readAs(f,'buf'); }).then(function(buf){
+    return window.pdfjsLib.getDocument({data: buf}).promise;
+  }).then(function(doc){
+    var pages = Math.min(doc.numPages, 80), chain = Promise.resolve(), out = [];
+    for (var i = 1; i <= pages; i++){
+      (function(n){
+        chain = chain.then(function(){ return doc.getPage(n); })
+          .then(function(p){ return p.getTextContent(); })
+          .then(function(tc){
+            var t = tc.items.map(function(it){ return it.str; }).join(' ').replace(/\s+/g,' ').trim();
+            if (t) out.push('--- Trang ' + n + ' ---\n' + t);
+          });
+      })(i);
+    }
+    return chain.then(function(){
+      var txt = out.join('\n\n');
+      if (!txt.trim()) txt = '(PDF không có lớp chữ — nhiều khả năng là bản scan. Hãy mô tả giúp nội dung hoặc gửi bản có chữ.)';
+      if (doc.numPages > pages) txt += '\n\n(… file có ' + doc.numPages + ' trang, đã đọc ' + pages + ' trang đầu)';
+      return txt;
+    });
+  });
+}
+function extractDocx(f){
+  return needMammoth().then(function(){ return readAs(f,'buf'); })
+    .then(function(buf){ return window.mammoth.extractRawText({arrayBuffer: buf}); })
+    .then(function(r){ return r.value || ''; });
+}
+function extractSheet(f){
+  return needXlsx().then(function(){ return readAs(f,'buf'); }).then(function(buf){
+    var wb = window.XLSX.read(buf, {type:'array'});
+    return wb.SheetNames.map(function(n){
+      var csv = window.XLSX.utils.sheet_to_csv(wb.Sheets[n]);
+      if (csv.length > 70000) csv = csv.slice(0, 70000) + '\n(… đã cắt bớt)';
+      return '=== Sheet: ' + n + ' ===\n' + csv;
+    }).join('\n\n');
+  });
+}
+function extractPptx(f){
+  return needZip().then(function(){ return readAs(f,'buf'); })
+    .then(function(buf){ return window.JSZip.loadAsync(buf); })
+    .then(function(zip){
+      var names = Object.keys(zip.files).filter(function(n){ return /^ppt\/slides\/slide\d+\.xml$/.test(n); })
+        .sort(function(a,b){ return (+a.match(/\d+/)[0]) - (+b.match(/\d+/)[0]); });
+      return Promise.all(names.map(function(n){
+        return zip.files[n].async('string').then(function(xml){
+          var t = (xml.match(/<a:t>[\s\S]*?<\/a:t>/g) || []).map(function(m){ return m.replace(/<[^>]+>/g,''); }).join(' ');
+          return '--- Slide ' + n.match(/\d+/)[0] + ' ---\n' + t;
+        });
+      })).then(function(arr){ return arr.join('\n\n'); });
+    });
+}
+function addFiles(list){
+  if (!list || !list.length) return;
+  list.forEach(function(f){
+    if (f.size > 25 * 1024 * 1024){ addMsg('sys','File "' + f.name + '" nặng quá 25 MB — hãy tách nhỏ rồi gửi lại.'); return; }
+    var item = {name:f.name, size:f.size, kind:'doc', text:'', dataUrl:'', loading:true};
+    state.files.push(item); renderFiles();
+
+    var low = f.name.toLowerCase(), p;
+    if (f.type && f.type.indexOf('image/') === 0){
+      item.kind = 'image';
+      p = readAs(f,'url').then(function(u){ item.dataUrl = u; return ''; });
+    }
+    else if (/\.pdf$/.test(low))            p = extractPdf(f);
+    else if (/\.docx?$/.test(low))          p = extractDocx(f);
+    else if (/\.(xlsx|xls|csv)$/.test(low)) p = extractSheet(f);
+    else if (/\.pptx$/.test(low))           p = extractPptx(f);
+    else                                    p = readAs(f,'text');
+
+    p.then(function(txt){
+      item.text = (txt || '').slice(0, 200000);
+      item.loading = false; renderFiles();
+    }).catch(function(e){
+      item.loading = false; item.error = true; renderFiles();
+      addMsg('sys','Không đọc được "' + f.name + '": ' + (e.message || e) + '. Bạn có thể chép nội dung vào ô chat.');
+    });
+  });
+}
+function renderFiles(){
+  el.files.innerHTML = '';
+  state.files.forEach(function(it, i){
+    var c = h('div','fchip');
+    var thumb = it.kind === 'image' && it.dataUrl ? '<img src="' + it.dataUrl + '" alt="">' : '📄';
+    var meta = it.loading ? 'đang đọc…' : (it.error ? 'lỗi đọc' :
+      (it.kind === 'image' ? bytes(it.size) : it.text.length.toLocaleString('vi-VN') + ' ký tự'));
+    c.innerHTML = thumb + '<b>' + esc(it.name) + '</b><i>' + meta + '</i>';
+    var x = h('button', null, '✕'); x.type = 'button'; x.title = 'Bỏ file này';
+    x.addEventListener('click', function(){ state.files.splice(i,1); renderFiles(); });
+    c.appendChild(x); el.files.appendChild(c);
+  });
+}
+
+/* ============================================================
+   HIỂN THỊ TIN NHẮN + DỰNG BẢNG
+   ============================================================ */
+function addMsg(role, text){
+  var d = h('div','msg ' + (role === 'user' ? 'me' : role === 'ai' ? 'ai' : role));
+  if (role === 'ai'){ d.__raw = text || ''; renderRich(d, text || ''); }
+  else d.textContent = text;
+  el.body.appendChild(d);
+  el.body.scrollTop = el.body.scrollHeight;
+  return d;
+}
+function inline(s){
+  return esc(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s.,)]|$)/g, '$1<em>$2</em>');
+}
+function tblParse(lines, i){
+  if (!/\|/.test(lines[i] || '')) return null;
+  var sep = lines[i+1] || '';
+  if (!/^\s*\|?[\s:-]*-{2,}[\s|:-]*$/.test(sep) || sep.indexOf('|') < 0) return null;
+  function cells(l){ return l.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(function(c){ return c.trim(); }); }
+  var head = cells(lines[i]), rows = [], j = i + 2;
+  while (j < lines.length && /\|/.test(lines[j]) && lines[j].trim()){ rows.push(cells(lines[j])); j++; }
+  if (!rows.length) return null;
+  return {head:head, rows:rows, next:j};
+}
+function tblToNumber(v){
+  var s = String(v).trim().replace(/[₫đ%\s]/g,'');
+  if (!s || /^0\d/.test(s)) return null;
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g,'').replace(',','.');
+  else if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s = s.replace(/,/g,'');
+  else if (/^-?\d+,\d+$/.test(s)) s = s.replace(',','.');
+  var n = parseFloat(s);
+  return (isFinite(n) && /^-?[\d.]+$/.test(s)) ? n : null;
+}
+function buildTable(t){
+  var box = h('div'), w = h('div','tbwrap');
+  var html = '<table><thead><tr>' + t.head.map(function(c){ return '<th>' + inline(c) + '</th>'; }).join('') + '</tr></thead><tbody>';
+  t.rows.forEach(function(r){
+    html += '<tr>' + t.head.map(function(_, k){ return '<td>' + inline(r[k] == null ? '' : r[k]) + '</td>'; }).join('') + '</tr>';
+  });
+  w.innerHTML = html + '</tbody></table>';
+  box.appendChild(w);
+
+  var tools = h('div','tbtools');
+  function mkBtn(label, fn){ var b = h('button', null, label); b.type='button'; b.addEventListener('click', fn); tools.appendChild(b); }
+  var aoa = [t.head].concat(t.rows.map(function(r){ return t.head.map(function(_, k){
+    var raw = r[k] == null ? '' : r[k]; var n = tblToNumber(raw); return n === null ? raw : n; }); }));
+
+  mkBtn('⬇ Excel', function(){
+    needXlsx().then(function(){
+      var wb = window.XLSX.utils.book_new();
+      window.XLSX.utils.book_append_sheet(wb, window.XLSX.utils.aoa_to_sheet(aoa), 'Bang');
+      window.XLSX.writeFile(wb, 'IDECO_bang_' + Date.now() + '.xlsx');
+    }).catch(function(e){ addMsg('sys','Không tải được thư viện Excel: ' + (e.message || e)); });
+  });
+  mkBtn('⬇ CSV', function(){
+    var hasComma = aoa.some(function(r){ return r.some(function(c){ return typeof c === 'string' && /\d,\d/.test(c); }); });
+    var sep = hasComma ? ';' : ',';
+    var csv = aoa.map(function(r){ return r.map(function(c){
+      var s = String(c == null ? '' : c);
+      return (/["\r\n]/.test(s) || s.indexOf(sep) >= 0) ? '"' + s.replace(/"/g,'""') + '"' : s;
+    }).join(sep); }).join('\r\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8'}));
+    a.download = 'IDECO_bang_' + Date.now() + '.csv'; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 3000);
+  });
+  mkBtn('📋 Chép', function(){
+    var tsv = aoa.map(function(r){ return r.join('\t'); }).join('\n');
+    (navigator.clipboard ? navigator.clipboard.writeText(tsv) : Promise.reject())
+      .then(function(){ addMsg('sys','Đã chép bảng — dán thẳng vào Excel được.'); })
+      .catch(function(){ addMsg('sys','Trình duyệt chặn chép tự động. Hãy bôi đen bảng rồi Ctrl+C.'); });
+  });
+  box.appendChild(tools);
+  return box;
+}
+function renderRich(container, raw){
+  container.innerHTML = '';
+  var lines = String(raw).split('\n'), i = 0, buf = [], list = null, listType = '';
+  function flushPara(){ if (!buf.length) return; container.appendChild(h('p', null, inline(buf.join('\n')).replace(/\n/g,'<br>'))); buf = []; }
+  function flushList(){ if (list){ container.appendChild(list); list = null; listType = ''; } }
+
+  while (i < lines.length){
+    var line = lines[i];
+    if (/^\s*```/.test(line)){
+      flushPara(); flushList();
+      var code = []; i++;
+      while (i < lines.length && !/^\s*```/.test(lines[i])){ code.push(lines[i]); i++; }
+      i++;
+      var pre = h('pre'), cd = h('code'); cd.textContent = code.join('\n');
+      pre.appendChild(cd); container.appendChild(pre);
+      continue;
+    }
+    var t = tblParse(lines, i);
+    if (t){ flushPara(); flushList(); container.appendChild(buildTable(t)); i = t.next; continue; }
+    var mh = line.match(/^\s*#{1,4}\s+(.+)$/);
+    if (mh){ flushPara(); flushList(); container.appendChild(h('h3', null, inline(mh[1]))); i++; continue; }
+    var mu = line.match(/^\s*[-*•]\s+(.+)$/), mo = line.match(/^\s*(\d+)[.)]\s+(.+)$/);
+    if (mu || mo){
+      flushPara();
+      var want = mu ? 'ul' : 'ol';
+      if (listType !== want){ flushList(); list = h(want); listType = want; }
+      list.appendChild(h('li', null, inline(mu ? mu[1] : mo[2])));
+      i++; continue;
+    }
+    if (!line.trim()){ flushPara(); flushList(); i++; continue; }
+    flushList(); buf.push(line); i++;
+  }
+  flushPara(); flushList();
+}
+/* thông báo kỹ thuật: mặc định chỉ ghi ra Console, không làm bẩn khung chat */
+function notice(t){
+  console.log('[' + CONFIG.ID + '] ' + t);
+  if (CONFIG.SHOW_NOTICES) addMsg('sys', t);
+}
+function addSourceBox(container, sources){
+  if (!sources || !sources.length) return;
+  var box = h('div','srcbox');
+  box.appendChild(h('b', null, 'Nguồn đã đọc:'));
+  sources.forEach(function(s, i){
+    var a = document.createElement('a');
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.textContent = '[' + (i+1) + '] ' + (s.title || s.url);
+    box.appendChild(a);
+  });
+  container.appendChild(box);
+}
+
+/* ============================================================
+   NGHIÊN CỨU WEB — DEEPSEEK TỰ ĐIỀU KHIỂN
+   Vòng lặp: model đọc câu hỏi → tự chọn trang cần mở → widget tải trang về
+   → model đọc kết quả, tự nói còn thiếu gì → chọn tiếp → dừng khi model báo đủ.
+   ============================================================ */
+function readerUrls(u){
+  var list = [], custom = String(AI.reader || '').trim().replace(/\/+$/,'');
+  if (custom) list.push(custom + '/' + u);
+  CONFIG.READER_ALT.forEach(function(pre){ list.push(pre + encodeURIComponent(u)); });
+  return list;
+}
+/* cổng dự phòng trả về HTML thô — phải tự bóc lấy chữ */
+function stripHtml(t){
+  if (!/<\s*(html|body|div|p|script)\b/i.test(t)) return t;
+  return t.replace(/<script[\s\S]*?<\/script>/gi,' ')
+          .replace(/<style[\s\S]*?<\/style>/gi,' ')
+          .replace(/<nav[\s\S]*?<\/nav>/gi,' ')
+          .replace(/<[^>]+>/g,' ')
+          .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+          .replace(/[ \t]{2,}/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+}
+/* thử lần lượt các cổng, nhớ cổng nào chạy được để lần sau đi thẳng */
+function fetchText(url, ms){
+  var urls = readerUrls(url);
+  var start = parseInt(lsGet(LS.rd, '0'), 10) || 0;
+  var order = [];
+  for (var i = 0; i < urls.length; i++) order.push((start + i) % urls.length);
+  var last = null, k = 0;
+  function tryOne(){
+    if (k >= order.length) return Promise.reject(new Error(last || 'không cổng đọc nào truy cập được'));
+    var pos = order[k++];
+    return hfetch(urls[pos], {method:'GET', headers:{'Accept':'text/plain, text/markdown, text/html, */*'}}, ms || CONFIG.PAGE_MS)
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      }).then(function(t){
+        if (!t || t.trim().length < 60) throw new Error('nội dung rỗng');
+        lsSet(LS.rd, String(pos));
+        return stripHtml(t);
+      }).catch(function(e){
+        last = String(e.message || e);
+        return tryOne();
+      });
+  }
+  return tryOne();
+}
+var ENGINES = [
+  'https://lite.duckduckgo.com/lite/?q=',
+  'https://duckduckgo.com/html/?q=',
+  'https://www.bing.com/search?q='
+];
+function unwrapDdg(u){
+  var m = u.match(/[?&]uddg=([^&]+)/);
+  if (m){ try{ return decodeURIComponent(m[1]); }catch(e){} }
+  return u;
+}
+/* chỉ chạy khi CHÍNH MODEL ra lệnh "tim" — không phải đường đi mặc định */
+function engineList(query, n){
+  var idx = 0;
+  function tryEngine(){
+    if (idx >= ENGINES.length) return Promise.reject(new Error('Không công cụ nào truy cập được'));
+    return fetchText(ENGINES[idx++] + encodeURIComponent(query), CONFIG.PAGE_MS).then(function(txt){
+      var out = [], seen = {}, re = /\[([^\]\n]{3,140})\]\((https?:\/\/[^\s)]+)\)/g, m;
+      while ((m = re.exec(txt)) !== null){
+        var url = unwrapDdg(m[2]);
+        if (/duckduckgo\.com|bing\.com|microsoft\.com\/|go\.microsoft|r\.jina\.ai/i.test(url)) continue;
+        if (/\.(css|js|png|jpg|jpeg|gif|svg|ico)$/i.test(url)) continue;
+        if (seen[url]) continue;
+        seen[url] = 1;
+        out.push({title: m[1].trim(), url: url});
+        if (out.length >= (n || 6)) break;
+      }
+      if (!out.length) throw new Error('Không bóc được kết quả');
+      return out;
+    }).catch(function(){ return tryEngine(); });
+  }
+  return tryEngine();
+}
+function openPage(url){
+  return fetchText(url, CONFIG.PAGE_MS).then(function(t){
+    return {url:url, content: String(t).replace(/\n{3,}/g,'\n\n').slice(0, CONFIG.PAGE_CHARS)};
+  }).catch(function(e){
+    return {url:url, content:'', err: String(e.message || e)};
+  });
+}
+/* bóc JSON model trả về, kể cả khi nó lỡ bọc trong ``` hoặc kèm lời dẫn */
+function parsePlan(raw){
+  var s = String(raw || '').replace(/```json|```/g, '').trim();
+  var a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a < 0 || b <= a) return null;
+  try{ return JSON.parse(s.slice(a, b + 1)); }catch(e){ return null; }
+}
+function pageTitle(txt, url){
+  var m = String(txt).match(/^\s*(?:Title:\s*)?(.{5,110})$/m);
+  return (m ? m[1].trim() : '') || url;
+}
+
+/* model đôi khi trả lời bằng văn xuôi thay vì JSON — vẫn vớt được các URL trong đó */
+function urlsFromProse(t){
+  var m = String(t || '').match(/https?:\/\/[^\s<>"')\]]+/g) || [];
+  var out = [], seen = {};
+  m.forEach(function(u){
+    u = u.replace(/[.,;)]+$/,'');
+    if (!seen[u]){ seen[u] = 1; out.push({url:u, why:'model nhắc tới trong kế hoạch'}); }
+  });
+  return out;
+}
+function deepResearch(question, model, say){
+  var visited = {}, sources = [], notes = [], round = 0;
+  var deadline = Date.now() + CONFIG.RESEARCH_MS;      // TRẦN cho cả giai đoạn nghiên cứu
+  function outOfTime(){ return Date.now() > deadline; }
+
+  function plannerMessages(){
+    var msgs = [{role:'system', content: CONFIG.PROMPT_PLAN.replace('N lệnh', AI.openN + ' lệnh') +
+      (AI.allowEngine ? '' : '\nLệnh "tim" ĐANG BỊ TẮT — chỉ được dùng lệnh "mo".') +
+      '\n\nHôm nay là ngày ' + today() + '.' +
+      (AI.siteHints ? '\n\nMột số trang thường dùng của ngành (chỉ là gợi ý, bạn tự quyết định):\n' + AI.siteHints : '')}];
+    var u = 'CÂU HỎI CẦN NGHIÊN CỨU: ' + question + '\n\n';
+    if (!notes.length) u += 'Đây là vòng đầu, bạn chưa đọc trang nào.';
+    else {
+      u += 'ĐÃ ĐỌC ĐƯỢC ' + notes.length + ' trang. Tóm tắt những gì thu được:\n\n' +
+           notes.map(function(n, i){
+             return '[' + (i+1) + '] ' + n.url + '\n' + (n.err ? '⚠️ Không mở được: ' + n.err : n.brief);
+           }).join('\n\n') +
+           '\n\nHãy đánh giá: dữ liệu này đã đủ trả lời chưa? Chưa đủ thì ra lệnh mở tiếp trang khác.';
+    }
+    u += '\n\nVòng hiện tại: ' + (round + 1) + '/' + AI.rounds + '. Trả lời bằng JSON như đã quy định.';
+    msgs.push({role:'user', content:u});
+    return msgs;
+  }
+
+  function step(){
+    if (round >= AI.rounds) return Promise.resolve();
+    if (outOfTime()){ say('⏱ Hết thời gian nghiên cứu — mình trả lời bằng những gì đã đọc được.'); return Promise.resolve(); }
+    say('🧠 Vòng ' + (round + 1) + ': đang tự chọn trang cần đọc…');
+    return callOnce(plannerMessages(), model, 900, CONFIG.PLAN_MS).then(function(raw){
+      var plan = parsePlan(raw);
+      if (!plan){
+        // model trả lời bằng văn xuôi: vớt URL trong đó thay vì bỏ cuộc
+        var loose = urlsFromProse(raw).filter(function(u){ return !visited[u.url]; }).slice(0, AI.openN);
+        if (!loose.length){ round = AI.rounds; return; }
+        say('🧠 Kế hoạch không đúng khuôn — mình lấy các trang model vừa nhắc tới.');
+        plan = {hanh_dong: loose.map(function(u){ return {loai:'mo', url:u.url, vi_sao:u.why}; })};
+      }
+      if (plan.suy_nghi) say('🧠 ' + String(plan.suy_nghi).slice(0, 150));
+      if (plan.da_du || !plan.hanh_dong || !plan.hanh_dong.length){ round = AI.rounds; return; }
+
+      var acts = plan.hanh_dong.slice(0, AI.openN);
+      var urls = [];
+      var pre = Promise.resolve();
+
+      acts.forEach(function(a){
+        if (!a) return;
+        if (a.loai === 'mo' && /^https?:\/\//.test(a.url || '')){
+          if (!visited[a.url]) urls.push({url:a.url, why:a.vi_sao || ''});
+        } else if (a.loai === 'tim' && AI.allowEngine && a.tu_khoa){
+          pre = pre.then(function(){
+            say('🔎 Model nhờ liệt kê trang cho: ' + a.tu_khoa);
+            return engineList(a.tu_khoa, AI.openN).then(function(list){
+              list.forEach(function(it){ if (!visited[it.url] && urls.length < AI.openN) urls.push({url:it.url, why:a.vi_sao || ''}); });
+            }).catch(function(){ say('🔎 Không liệt kê được, model sẽ tự chọn trang ở vòng sau.'); });
+          });
+        }
+      });
+
+      return pre.then(function(){
+        if (!urls.length){ round++; return step(); }
+        say('📖 Đang mở ' + urls.length + ' trang model chọn…');
+        var done = 0;
+        return Promise.all(urls.map(function(u){
+          visited[u.url] = 1;
+          return openPage(u.url).then(function(p){
+            done++;
+            say('📖 Đã đọc ' + done + '/' + urls.length + ' trang…');
+            if (p.content){
+              var title = pageTitle(p.content, p.url);
+              sources.push({title:title, url:p.url, content:p.content, why:u.why});
+              notes.push({url:p.url, brief: p.content.replace(/\s+/g,' ').slice(0, 700) + '…'});
+            } else {
+              notes.push({url:p.url, err:p.err || 'không có nội dung'});
+            }
+          });
+        })).then(function(){ round++; return step(); });
+      });
+    }).catch(function(e){
+      console.warn('[' + CONFIG.ID + '] vòng nghiên cứu lỗi:', e);
+      round = AI.rounds;
+    });
+  }
+
+  return step().then(function(){
+    if (!sources.length) return {ctx:'', sources:[]};
+    var ctx = '===== NỘI DUNG CÁC TRANG BẠN ĐÃ CHỌN MỞ VÀ ĐỌC =====\n' +
+      sources.map(function(s, i){
+        return 'NGUỒN [' + (i+1) + '] ' + s.title + '\nURL: ' + s.url +
+               (s.why ? '\nLý do bạn chọn trang này: ' + s.why : '') + '\n' + s.content;
+      }).join('\n\n==========\n\n') + '\n===== HẾT PHẦN NGUỒN =====';
+    return {ctx:ctx, sources:sources};
+  });
+}
+/* link người dùng dán thẳng vào ô chat */
+function grabUrls(text){
+  var m = String(text).match(/https?:\/\/[^\s<>"')]+/g);
+  return m ? m.slice(0, 4) : [];
+}
+
+/* ============================================================
+   GỌI API
+   ============================================================ */
+var MODEL_ERR = /model.*(not|kh(ô|o)ng).*(exist|found|support)|not authorized|unsupported model|invalid model|no such model/i;
+var AUTH_ERR  = /unauthor|authentication failed|invalid.*(key|token)|forbidden|api key/i;
+
+function apiUrl(){ return String(AI.base || '').replace(/\/+$/,'') + '/chat/completions'; }
+function headers(){ return {'Content-Type':'application/json','Authorization':'Bearer ' + cleanKey(AI.key)}; }
+
+/* gọi một phát, không stream — dùng cho việc phụ (tóm tắt từng đoạn tài liệu) */
+function callOnce(msgs, model, maxTok, ms){
+  return hfetch(apiUrl(), {
+    method:'POST', headers: headers(),
+    body: JSON.stringify({model:model, messages:msgs, stream:false, temperature:0.2, max_tokens: maxTok || 1200})
+  }, ms || CONFIG.TIMEOUT_MS).then(function(r){
+    return r.text().then(function(t){
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' — ' + t.slice(0,300));
+      var j; try{ j = JSON.parse(t); }catch(e){ throw new Error('Máy chủ trả về dữ liệu lạ'); }
+      if (j.error) throw new Error(j.error.message || 'Lỗi API');
+      var c = j.choices && j.choices[0] && (j.choices[0].message || {}).content;
+      if (Array.isArray(c)) c = c.map(function(p){ return p.text || ''; }).join('');
+      return c || '';
+    });
+  });
+}
+function callAPI(msgs, model, onDelta, onThink){
+  return hfetch(apiUrl(), {
+    method:'POST', headers: headers(),
+    body: JSON.stringify({model:model, messages:msgs, stream:true,
+      temperature:Number(AI.temp), max_tokens:Number(AI.maxTok)})
+  }, CONFIG.TIMEOUT_MS).then(function(r){
+    if (!r.ok){
+      return r.text().then(function(t){
+        var e = new Error('HTTP ' + r.status + ' — ' + (t || '').slice(0,400));
+        e.status = r.status; e.body = t || ''; throw e;
+      });
+    }
+    if (!r.body) return r.text().then(function(t){ onDelta(t); return t; });
+
+    var reader = r.body.getReader(), dec = new TextDecoder('utf-8');
+    var buf = '', full = '', lastByte = Date.now(), stalled = false;
+    var stallTimer = setInterval(function(){
+      if (Date.now() - lastByte > CONFIG.STALL_MS){ stalled = true; try{ reader.cancel(); }catch(e){} }
+    }, 3000);
+
+    function pump(){
+      return reader.read().then(function(res){
+        if (res.done){
+          clearInterval(stallTimer);
+          if (stalled && !full) throw new Error('Máy chủ ngừng gửi dữ liệu quá ' + Math.round(CONFIG.STALL_MS/1000) + ' giây.');
+          return full;
+        }
+        lastByte = Date.now();
+        buf += dec.decode(res.value, {stream:true});
+        var lines = buf.split('\n'); buf = lines.pop();
+        lines.forEach(function(ln){
+          ln = ln.trim();
+          if (!ln || ln.indexOf('data:') !== 0) return;
+          var d = ln.slice(5).trim();
+          if (d === '[DONE]') return;
+          var j; try{ j = JSON.parse(d); }catch(e){ return; }
+          if (j.error) throw new Error(j.error.message || JSON.stringify(j.error));
+          var ch = j.choices && j.choices[0];
+          if (!ch) return;
+          var delta = ch.delta || ch.message || {};
+          if (delta.reasoning_content && onThink) onThink(delta.reasoning_content);
+          var c = delta.content;
+          if (typeof c === 'string' && c){ full += c; onDelta(c); }
+          else if (Array.isArray(c)) c.forEach(function(p){ if (p && typeof p.text === 'string'){ full += p.text; onDelta(p.text); } });
+        });
+        return pump();
+      });
+    }
+    return pump().catch(function(e){ clearInterval(stallTimer); throw e; });
+  });
+}
+function friendlyError(e){
+  var m = String(e && (e.message || e));
+  if (/aborted|AbortError/i.test(m))
+    return 'Quá thời gian chờ. Máy chủ chưa trả lời. Thử lại, hoặc rút ngắn tài liệu đính kèm.';
+  if (/Failed to fetch|NetworkError|Load failed/i.test(m))
+    return 'Không kết nối được máy chủ.\n• Mở file bằng đường dẫn file:// thì trình duyệt sẽ chặn — hãy đưa file lên web (GitHub Pages) rồi mở bằng https.\n• Nếu Console báo CORS, máy chủ không cho gọi thẳng từ trình duyệt — dựng Cloudflare Worker rồi dán địa chỉ Worker vào ⚙ Cài đặt → Địa chỉ API.';
+  if (AUTH_ERR.test(m))
+    return 'Khóa API bị từ chối. Mở ⚙ Cài đặt, dán lại khóa (bỏ chữ "Bearer" và khoảng trắng thừa) rồi bấm Lưu cài đặt.';
+  if (/429|rate limit|quota/i.test(m))
+    return 'Máy chủ báo quá số lượt cho phép hoặc hết hạn mức. Chờ một lát rồi gửi lại.';
+  return 'Lỗi: ' + m;
+}
+
+/* ============================================================
+   DỰNG PROMPT
+   ============================================================ */
+function systemText(){
+  var s = AI.sysPrompt + '\n\nHôm nay là ngày ' + today() + '.';
+  var inst = projInstruction();
+  if (inst) s += '\n\n=== CHỈ DẪN CỦA PROJECT "' + (projects[curProj].name) + '" (ưu tiên cao nhất) ===\n' + inst;
+  if (state.mode === 'deep') s += '\n\n' + CONFIG.PROMPT_DEEP;
+  // CHỈ ép luật "không được dùng trí nhớ" khi thật sự có nguồn — không thì model sẽ im lặng
+  if (state.mode === 'web' && state.hasSources) s += '\n\n' + CONFIG.PROMPT_SEARCH;
+  else if (state.mode === 'web') s += '\n\nGhi chú: lần này KHÔNG mở được trang web nào. Hãy trả lời bằng kiến thức sẵn có của bạn, nói rõ đây là thông tin chưa kiểm chứng từ web và gợi ý vài trang người dùng nên tự tra.';
+  return s;
+}
+function docsText(){
+  var parts = [];
+  state.files.forEach(function(f){
+    if (f.kind !== 'image' && f.text) parts.push({name:f.name, text:f.text});
+  });
+  return parts;
+}
+
+/* tài liệu quá dài: đọc từng đoạn rồi tổng hợp — thay vì cắt cụt và bỏ mất dữ liệu */
+function digestLongDocs(docs, question, model, onStep){
+  var joined = docs.map(function(d){ return d.text; }).join('\n').length;
+  if (joined <= CONFIG.BIG_DOC) return Promise.resolve(null);
+
+  var chunks = [];
+  docs.forEach(function(d){
+    for (var i = 0; i < d.text.length; i += CONFIG.CHUNK){
+      chunks.push({name:d.name, part: chunks.length + 1, text: d.text.slice(i, i + CONFIG.CHUNK)});
+      if (chunks.length >= CONFIG.MAX_CHUNKS) return;
+    }
+  });
+  chunks = chunks.slice(0, CONFIG.MAX_CHUNKS);
+
+  var results = [], k = 0;
+  function step(){
+    if (k >= chunks.length) return Promise.resolve(results.join('\n\n'));
+    var c = chunks[k];
+    if (onStep) onStep(k + 1, chunks.length);
+    return callOnce([
+      {role:'system', content:'Bạn là bộ lọc dữ liệu. Đọc đoạn tài liệu và trích ra MỌI dữ kiện liên quan tới câu hỏi: số liệu, tên riêng, ngày tháng, điều khoản, kết luận. Ghi gọn dạng gạch đầu dòng, giữ nguyên con số. Không bình luận, không suy đoán. Không liên quan gì thì ghi đúng một chữ: TRỐNG.'},
+      {role:'user', content:'CÂU HỎI: ' + question + '\n\n--- ĐOẠN ' + (k+1) + '/' + chunks.length + ' (' + c.name + ') ---\n' + c.text}
+    ], model, 900).then(function(t){
+      if (t && t.trim() && !/^TRỐNG\.?$/i.test(t.trim()))
+        results.push('--- Trích từ ' + c.name + ' (đoạn ' + (k+1) + ') ---\n' + t.trim());
+      k++;
+      return step();
+    }).catch(function(){ k++; return step(); });
+  }
+  return step();
+}
+
+function buildMessages(userText, extraContext){
+  var msgs = [{role:'system', content: systemText()}];
+  state.msgs.slice(-CONFIG.HISTORY_TURNS * 2).forEach(function(m){ msgs.push({role:m.role, content:m.content}); });
+
+  var parts = [], images = [];
+  if (extraContext) parts.push(extraContext);
+  state.files.forEach(function(f){
+    if (f.kind === 'image'){
+      if (AI.sendImage && f.dataUrl) images.push(f.dataUrl);
+      else parts.push('[Ảnh đính kèm: ' + f.name + ' — model hiện tại chỉ đọc chữ. Nếu cần phân tích ảnh, hãy nhờ người dùng mô tả nội dung ảnh.]');
+    }
+  });
+  var content = parts.length ? parts.join('\n\n') + '\n\n----- CÂU HỎI -----\n' + userText : userText;
+
+  if (images.length){
+    var arr = [{type:'text', text:content}];
+    images.forEach(function(u){ arr.push({type:'image_url', image_url:{url:u}}); });
+    msgs.push({role:'user', content:arr});
+  } else msgs.push({role:'user', content:content});
+  return msgs;
+}
+
+/* ============================================================
+   GỬI TIN
+   ============================================================ */
+function send(){
+  if (state.busy) return;
+  var text = el.ta.value.trim();
+  if (state.files.some(function(f){ return f.loading; })){ addMsg('sys','Đang đọc tài liệu, chờ một chút rồi gửi nhé.'); return; }
+  if (!text && !state.files.length) return;
+  if (!cleanKey(AI.key)){ addMsg('err','Chưa có khóa API. Mở ⚙ Cài đặt để nhập.'); return; }
+
+  var shown = text || '(phân tích tài liệu đính kèm)';
+  if (state.files.length) shown += '\n📎 ' + state.files.map(function(f){ return f.name; }).join(', ');
+  addMsg('user', shown);
+
+  var question = text || 'Hãy đọc kỹ tài liệu đính kèm và phân tích sâu giúp mình.';
+  var docs = docsText();
+  var pastedUrls = grabUrls(text);
+
+  el.ta.value = ''; el.ta.style.height = 'auto';
+  state.busy = true;
+  el.panel.querySelector('[data-a="send"]').disabled = true;
+  el.sub.textContent = 'Đang xử lý…';
+
+  var progress = addMsg('sys','Đang chuẩn bị…');
+  var logLines = [];
+  var box = h('div','msg ai'), thinkEl = null, txtEl = h('div');
+  box.appendChild(txtEl);
+  txtEl.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+  el.body.appendChild(box);
+  el.body.scrollTop = el.body.scrollHeight;
+
+  var model = AI.model, sources = [], acc = '', first = true;
+
+  function onDelta(c){
+    if (first){ txtEl.innerHTML = ''; first = false; if (progress) progress.remove(); }
+    acc += c; txtEl.textContent = acc;
+    el.body.scrollTop = el.body.scrollHeight;
+  }
+  function onThink(c){
+    if (!thinkEl){ thinkEl = h('div','think'); box.insertBefore(thinkEl, txtEl); }
+    thinkEl.textContent = (thinkEl.textContent + c).slice(-1200);
+    el.body.scrollTop = el.body.scrollHeight;
+  }
+  function say(t){
+    logLines.push(t);
+    if (progress) progress.textContent = t;
+    console.log('[' + CONFIG.ID + '] ' + t);
+  }
+  /* giữ lại nhật ký các bước để biết vì sao không ra kết quả */
+  function keepLog(){
+    if (!CONFIG.SHOW_NOTICES || logLines.length < 2) return;
+    var d = h('div','msg sys');
+    d.style.textAlign = 'left';
+    d.style.whiteSpace = 'pre-wrap';
+    d.textContent = '📋 Các bước đã chạy:\n• ' + logLines.join('\n• ');
+    el.body.insertBefore(d, box);
+  }
+
+  /* --- Bước 1: gom bối cảnh (web / link dán / tài liệu dài) --- */
+  var prep = Promise.resolve('');
+
+  if (state.mode === 'web'){
+    prep = deepResearch(question, model, say).then(function(res){
+      sources = res.sources;
+      if (!res.ctx){
+        keepLog();
+        notice('Không mở được trang nào — trả lời bằng kiến thức sẵn có. Vào ⚙ Cài đặt → 🔌 Kiểm tra cổng đọc trang để xem cổng nào bị chặn.');
+      }
+      return res.ctx;
+    }).catch(function(e){
+      notice('Nghiên cứu web không chạy được: ' + (e.message || e) + ' — trả lời bằng kiến thức sẵn có.');
+      return '';
+    });
+  }
+  else if (pastedUrls.length){
+    say('📖 Đang mở ' + pastedUrls.length + ' đường link bạn gửi…');
+    var done = 0;
+    prep = Promise.all(pastedUrls.map(function(u){
+      return openPage(u).then(function(p){
+        done++; say('📖 Đã đọc ' + done + '/' + pastedUrls.length + ' trang…');
+        if (p.content) sources.push({title: pageTitle(p.content, p.url), url:p.url, content:p.content});
+      });
+    })).then(function(){
+      if (!sources.length) return '';
+      return '===== NỘI DUNG TRANG NGƯỜI DÙNG GỬI =====\n' + sources.map(function(it, i){
+        return 'NGUỒN [' + (i+1) + '] ' + it.url + '\n' + it.content;
+      }).join('\n\n==========\n\n') + '\n===== HẾT =====';
+    }).catch(function(){ return ''; });
+  }
+
+  /* --- Bước 2: tài liệu đính kèm --- */
+  prep = prep.then(function(ctx){
+    if (!docs.length) return ctx;
+    return digestLongDocs(docs, question, model, function(d, n){
+      say('📑 Tài liệu dài — đang đọc phần ' + d + '/' + n + '…');
+    }).then(function(digest){
+      var docBlock;
+      if (digest !== null){
+        docBlock = '===== TRÍCH LỌC TỪ TÀI LIỆU DÀI (' + docs.map(function(d){ return d.name; }).join(', ') + ') =====\n' +
+                   (digest || '(không tìm thấy dữ kiện liên quan trong tài liệu)') + '\n===== HẾT TRÍCH LỌC =====';
+      } else {
+        docBlock = docs.map(function(d){
+          return '===== TÀI LIỆU ĐÍNH KÈM: ' + d.name + ' =====\n' + d.text + '\n===== HẾT ' + d.name + ' =====';
+        }).join('\n\n');
+      }
+      return ctx ? ctx + '\n\n' + docBlock : docBlock;
+    });
+  });
+
+  /* --- Bước 3: hỏi AI --- */
+  prep.then(function(ctx){
+    state.hasSources = !!(ctx && sources.length);
+    say('🤖 Đang soạn câu trả lời…');
+    var msgs = buildMessages(question, ctx);
+    state.msgs.push({role:'user', content: msgs[msgs.length-1].content});
+    state.files = []; renderFiles();
+
+    var chain = [AI.model].concat(CONFIG.MODEL_CHAIN.filter(function(m){ return m !== AI.model; }));
+    var idx = 0;
+    function attempt(){
+      model = chain[idx];
+      return callAPI(msgs, model, onDelta, onThink).catch(function(e){
+        var m = String(e.message || e) + ' ' + (e.body || '');
+        if (MODEL_ERR.test(m) && idx < chain.length - 1 && !acc){
+          idx++; console.warn('[' + CONFIG.ID + '] đổi model → ' + chain[idx]);
+          return attempt();
+        }
+        throw e;
+      });
+    }
+    return attempt().then(function(){
+      if (chain[idx] !== AI.model){ AI.model = chain[idx]; saveCfg(); }
+    });
+  }).then(function(){
+    if (progress) progress.remove();
+    if (!acc.trim()) acc = '(Máy chủ trả về nội dung rỗng. Bạn thử hỏi lại nhé.)';
+    box.__raw = acc;
+    renderRich(txtEl, acc);
+    addSourceBox(box, sources);
+    if (thinkEl) thinkEl.remove();
+    state.msgs.push({role:'assistant', content:acc});
+    saveSession();
+  }).catch(function(e){
+    console.error('[' + CONFIG.ID + ']', e);
+    if (progress) progress.remove();
+    if (acc.trim()){
+      box.__raw = acc; renderRich(txtEl, acc); addSourceBox(box, sources);
+      state.msgs.push({role:'assistant', content:acc});
+      addMsg('err','Câu trả lời bị ngắt giữa chừng. ' + friendlyError(e));
+    } else {
+      box.remove();
+      addMsg('err', friendlyError(e));
+    }
+    if (thinkEl) thinkEl.remove();
+  }).then(function(){
+    state.busy = false;
+    el.panel.querySelector('[data-a="send"]').disabled = false;
+    el.sub.textContent = curProj && projects[curProj] ? 'Project: ' + projects[curProj].name : 'Sẵn sàng';
+    el.ta.focus();
+  });
+}
+
+/* ============================================================
+   LỊCH SỬ TRÒ CHUYỆN
+   ============================================================ */
+function loadSessions(){ try{ return JSON.parse(lsGet(LS.sess, '[]')) || []; }catch(e){ return []; } }
+function storeSessions(a){ lsSet(LS.sess, JSON.stringify(a.slice(0, CONFIG.MAX_SESSIONS))); }
+function flat(c){ return typeof c === 'string' ? c : (Array.isArray(c) ? c.map(function(p){ return p.text || ''; }).join(' ') : ''); }
+function saveSession(){
+  if (!state.msgs.length) return;
+  var all = loadSessions();
+  var title = flat(state.msgs[0].content).replace(/\s+/g,' ').trim().slice(0,60) || 'Cuộc trò chuyện';
+  var rec = {id: state.curSess || ('s' + Date.now()), title:title, at:nowStr(), msgs: state.msgs.slice(-60)};
+  state.curSess = rec.id;
+  lsSet(LS.last, rec.id);                       // nhớ cuộc đang dở để mở lại trang là có ngay
+  all = all.filter(function(s){ return s.id !== rec.id; });
+  all.unshift(rec); storeSessions(all);
+}
+/* mở lại trang thì nối tiếp đúng cuộc chat dở dang, không bắt đầu từ số 0 */
+function restoreLast(){
+  var id = lsGet(LS.last, '');
+  if (!id) return false;
+  var rec = loadSessions().filter(function(s){ return s.id === id; })[0];
+  if (!rec || !rec.msgs || !rec.msgs.length) return false;
+  state.msgs = rec.msgs.slice();
+  state.curSess = rec.id;
+  el.body.innerHTML = '';
+  rec.msgs.forEach(function(m){ addMsg(m.role === 'user' ? 'user' : 'ai', flat(m.content)); });
+  notice('↩ Đã mở lại cuộc trò chuyện trước (' + rec.at + ').');
+  return true;
+}
+function newChat(){
+  saveSession();
+  state.msgs = []; state.curSess = null; state.files = [];
+  lsSet(LS.last, '');
+  renderFiles(); el.body.innerHTML = '';
+  addMsg('ai', CONFIG.WELCOME);
+  el.ovHist.classList.remove('open');
+}
+function openHistory(){
+  el.ovSet.classList.remove('open');
+  saveSession();
+  var all = loadSessions();
+  el.histBody.innerHTML = '';
+  if (!all.length){ el.histBody.appendChild(h('div','empty','Chưa có cuộc trò chuyện nào được lưu.')); }
+  else {
+    all.forEach(function(s){
+      var it = h('div','sitem');
+      it.innerHTML = '<span class="st"><b>' + esc(s.title) + '</b><i>' + esc(s.at) + ' · ' + s.msgs.length + ' tin</i></span>';
+      var bOpen = h('button', null, 'Mở lại'), bDown = h('button', null, '⬇'), bDel = h('button', null, '🗑');
+      bOpen.addEventListener('click', function(){
+        state.msgs = s.msgs.slice(); state.curSess = s.id;
+        el.body.innerHTML = '';
+        s.msgs.forEach(function(m){ addMsg(m.role === 'user' ? 'user' : 'ai', flat(m.content)); });
+        el.ovHist.classList.remove('open');
+      });
+      bDown.addEventListener('click', function(){
+        var txt = s.msgs.map(function(m){ return (m.role === 'user' ? 'BẠN' : 'TRỢ LÝ') + ':\n' + flat(m.content); }).join('\n\n');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob(['\ufeff' + txt], {type:'text/plain;charset=utf-8'}));
+        a.download = 'chat_' + s.id + '.txt'; a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 3000);
+      });
+      bDel.addEventListener('click', function(){
+        storeSessions(loadSessions().filter(function(x){ return x.id !== s.id; }));
+        if (state.curSess === s.id){ state.curSess = null; lsSet(LS.last, ''); }
+        if (lsGet(LS.last,'') === s.id) lsSet(LS.last, '');
+        openHistory();
+      });
+      it.appendChild(bOpen); it.appendChild(bDown); it.appendChild(bDel);
+      el.histBody.appendChild(it);
+    });
+    var clr = h('button','btn gh','🗑 Xóa tất cả lịch sử');
+    clr.style.marginTop = '10px';
+    clr.addEventListener('click', function(){
+      storeSessions([]); state.curSess = null; lsSet(LS.last, '');
+      state.msgs = []; el.body.innerHTML = ''; addMsg('ai', CONFIG.WELCOME);
+      openHistory();
+    });
+    el.histBody.appendChild(clr);
+  }
+  el.ovHist.classList.add('open');
+}
+
+/* ============================================================
+   CÀI ĐẶT
+   ============================================================ */
+function f(name){ return el.ovSet.querySelector('[data-f="' + name + '"]'); }
+function fillSettings(){
+  f('base').value = AI.base; f('key').value = AI.key; f('model').value = AI.model;
+  f('temp').value = AI.temp; f('maxTok').value = AI.maxTok;
+  f('sendImage').checked = !!AI.sendImage; f('sysPrompt').value = AI.sysPrompt;
+  f('reader').value = AI.reader; f('rounds').value = AI.rounds; f('openN').value = AI.openN;
+  f('allowEngine').checked = !!AI.allowEngine; f('siteHints').value = AI.siteHints;
+  f('fbUrl').value = AI.fbUrl; f('fbNode').value = AI.fbNode;
+}
+function openSettings(){
+  el.ovHist.classList.remove('open');
+  state.setTouched = false;
+  fillSettings(); renderProjList();
+  setFbStatus(fbOn() ? 'Firebase: ' + fbBase() + ' → /' + AI.fbNode : 'Firebase: chưa khai đường dẫn — project chỉ lưu trong máy này.');
+  el.ovSet.classList.add('open');
+}
+function readSettings(){
+  AI.base = (f('base').value || CONFIG.API_BASE).trim().replace(/\/+$/,'');
+  AI.key = cleanKey(f('key').value);
+  AI.model = (f('model').value || CONFIG.MODEL).trim();
+  AI.temp = Math.max(0, Math.min(2, parseFloat(f('temp').value) || CONFIG.TEMPERATURE));
+  AI.maxTok = Math.max(256, parseInt(f('maxTok').value,10) || CONFIG.MAX_TOKENS);
+  AI.sendImage = !!f('sendImage').checked;
+  AI.sysPrompt = f('sysPrompt').value || CONFIG.SYSTEM_PROMPT;
+  AI.reader = (f('reader').value || CONFIG.READER).trim();
+  AI.rounds = Math.max(1, Math.min(5, parseInt(f('rounds').value,10) || CONFIG.ROUNDS));
+  AI.openN = Math.max(1, Math.min(6, parseInt(f('openN').value,10) || CONFIG.OPEN_PER_ROUND));
+  AI.allowEngine = !!f('allowEngine').checked;
+  AI.siteHints = f('siteHints').value || '';
+  AI.fbUrl = (f('fbUrl').value || '').trim().replace(/\/+$/,'');
+  AI.fbNode = (f('fbNode').value || CONFIG.FB_NODE).trim();
+  saveCfg();
+}
+function saveSettings(){
+  readSettings();
+  state.setTouched = false;
+  el.ovSet.classList.remove('open');            // đóng bảng trước khi in vào khung chat
+  addMsg('sys','Đã lưu cài đặt. Model: ' + AI.model + (fbOn() ? ' · Firebase đã khai' : ''));
+  if (fbOn()) fbPushConfig().catch(function(e){ notice('Cài đặt chưa lên được Firebase: ' + (e.message || e)); });
+}
+function resetSettings(){
+  AI.base = CONFIG.API_BASE; AI.key = CONFIG.API_KEY; AI.model = CONFIG.MODEL;
+  AI.temp = CONFIG.TEMPERATURE; AI.maxTok = CONFIG.MAX_TOKENS; AI.sendImage = CONFIG.SEND_IMAGE;
+  AI.sysPrompt = CONFIG.SYSTEM_PROMPT; AI.reader = CONFIG.READER;
+  AI.rounds = CONFIG.ROUNDS; AI.openN = CONFIG.OPEN_PER_ROUND;
+  AI.allowEngine = CONFIG.ALLOW_ENGINE; AI.siteHints = CONFIG.SITE_HINTS;
+  AI.fbUrl = CONFIG.FB_URL; AI.fbNode = CONFIG.FB_NODE;
+  saveCfg(); fillSettings(); state.setTouched = false;
+  setFbStatus('↺ Đã trả cài đặt về mặc định.');
+}
+function testConnection(){
+  el.ovSet.classList.remove('open');
+  var k = cleanKey(f('key').value || AI.key);
+  var line = addMsg('sys','Đang kiểm tra kết nối tới ' + (f('base').value || AI.base) + ' …');
+  hfetch(String(f('base').value || AI.base).replace(/\/+$/,'') + '/chat/completions', {
+    method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer ' + k},
+    body: JSON.stringify({model:(f('model').value || AI.model), messages:[{role:'user',content:'ping'}], max_tokens:8, stream:false})
+  }, 25000).then(function(r){ return r.text().then(function(t){ return {ok:r.ok, status:r.status, t:t}; }); })
+  .then(function(res){
+    line.textContent = (res.ok && !AUTH_ERR.test(res.t) ? '✅ Kết nối tốt. ' : '⚠️ ') +
+      'HTTP ' + res.status + ' · khóa ' + k.length + ' ký tự (' + (k.slice(0,6) || '—') + '…) · ' + res.t.slice(0,220);
+  }).catch(function(e){ line.textContent = '❌ ' + friendlyError(e); });
+}
+
+/* ---- Firebase: các nút trong Cài đặt ---- */
+function fbPushAll(){
+  readSettings();
+  if (!fbOn()){ setFbStatus('⚠️ Chưa khai đường dẫn Realtime Database.'); return; }
+  setFbStatus('⬆ Đang đưa lên Firebase…');
+  var jobs = [fbPushConfig()].concat(Object.keys(projects).map(function(id){ return fbPushProject(id); }));
+  Promise.all(jobs)
+    .then(function(){ setFbStatus('✅ Đã đưa lên Firebase lúc ' + nowStr() + ' — máy khác bấm "⬇ Lấy về" là có.'); })
+    .catch(function(e){ setFbStatus('❌ ' + fbHint(e)); });
+}
+function fbPullNow(){
+  readSettings();
+  if (!fbOn()){ setFbStatus('⚠️ Chưa khai đường dẫn Realtime Database.'); return; }
+  state.setTouched = false;
+  setFbStatus('⬇ Đang lấy về…');
+  fbPull().then(function(g){
+    fillSettings(); renderProjList(); renderProjSelect();
+    setFbStatus('✅ Đã lấy về lúc ' + nowStr() + (g.proj ? ' · ' + g.proj + ' project' : '') + (g.cfg ? ' · có cấu hình' : ''));
+  }).catch(function(e){ setFbStatus('❌ ' + fbHint(e)); });
+}
+function fbTest(){
+  readSettings();
+  if (!fbOn()){ setFbStatus('⚠️ Chưa khai đường dẫn Realtime Database.'); return; }
+  setFbStatus('🔌 Đang thử ghi/đọc…');
+  fbWrite('/ping', {at: Date.now(), by: 'widget ' + CONFIG.BUILD_REV}, 'PUT')
+    .then(function(){ return fbGet('/ping'); })
+    .then(function(v){ setFbStatus(v ? '✅ Firebase ghi và đọc đều được: ' + fbBase() + '/' + AI.fbNode : '⚠️ Ghi được nhưng đọc về rỗng — kiểm tra Rules.'); })
+    .catch(function(e){ setFbStatus('❌ ' + fbHint(e)); });
+}
+/* thử từng cổng đọc trên một trang thật, in kết quả ra khung chat */
+function testReader(){
+  readSettings();
+  el.ovSet.classList.remove('open');              // đóng bảng trước, không thì kết quả bị che
+  var target = 'https://example.com';
+  var urls = readerUrls(target);
+  var line = addMsg('sys','🔌 Đang thử ' + urls.length + ' cổng đọc trang…');
+  line.style.textAlign = 'left';
+  line.style.whiteSpace = 'pre-wrap';
+  var out = [];
+  var k = 0;
+  function nextOne(){
+    if (k >= urls.length){
+      var okCount = out.filter(function(o){ return o.ok; }).length;
+      line.textContent = '🔌 Kết quả thử cổng đọc trang:\n' +
+        out.map(function(o){ return (o.ok ? '✅ ' : '❌ ') + o.name + ' — ' + o.msg; }).join('\n') +
+        '\n\n' + (okCount ? 'Có ' + okCount + ' cổng chạy được, chức năng nghiên cứu web dùng được.'
+                            : 'Không cổng nào chạy được. Thường do: mở trang bằng file:// (phải mở bằng https), mạng công ty chặn, hoặc cổng hết lượt miễn phí. Mình có thể dựng Cloudflare Worker đọc trang riêng cho IDECO.');
+      return;
+    }
+    var u = urls[k], name = u.replace(/^https?:\/\//,'').split(/[\/?]/)[0];
+    k++;
+    line.textContent = '🔌 Đang thử cổng ' + k + '/' + urls.length + ': ' + name + '…';
+    return hfetch(u, {method:'GET'}, 20000).then(function(r){
+      return r.text().then(function(t){
+        out.push({name:name, ok: r.ok && t.trim().length > 60,
+                  msg: 'HTTP ' + r.status + ', nhận ' + t.trim().length + ' ký tự'});
+        return nextOne();
+      });
+    }).catch(function(e){
+      var m = String(e.message || e);
+      out.push({name:name, ok:false, msg: /Failed to fetch|NetworkError/i.test(m) ? 'bị chặn (CORS hoặc mạng)' : m});
+      return nextOne();
+    });
+  }
+  nextOne();
+}
+function fbHint(e){
+  var m = String(e && (e.message || e));
+  if (/401|Permission denied/i.test(m))
+    return 'Firebase từ chối quyền. Vào Firebase Console → Realtime Database → Rules, đặt ".read" và ".write" thành true cho nhánh này (hoặc dùng quy tắc riêng của công ty).';
+  if (/404/.test(m))
+    return 'Sai đường dẫn database (404). Chép lại đúng dòng hiện ở Firebase Console — vùng châu Á có dạng …-default-rtdb.asia-southeast1.firebasedatabase.app';
+  if (/Failed to fetch|NetworkError/i.test(m))
+    return 'Không nối được tới Firebase. Kiểm tra mạng, và nhớ mở trang bằng https chứ không phải file://';
+  return m;
+}
+
+/* ============================================================
+   KHỞI ĐỘNG
+   ============================================================ */
+function boot(){
+  if (document.getElementById(CONFIG.ID + '-host')) return;   // chống nhúng 2 lần
+  if (!document.body){ setTimeout(boot, 60); return; }
+  build();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+
+})();
+</script>
+<!-- ================= IDECO-CHAT SCRIPT-END ================= -->
+</body>
+</html>
