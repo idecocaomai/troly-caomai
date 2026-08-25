@@ -92,7 +92,7 @@
    ============================================================ */
 var CONFIG = {
   ID:            'ideco-chao-ban',
-  BUILD_REV:     '20260822-6',               // in ra Console để biết trình duyệt nạp đúng bản
+  BUILD_REV:     '20260825-1',               // in ra Console để biết trình duyệt nạp đúng bản
 
   BRAND:         'IDECO',
   LAUNCH_TEXT:   'Chào Bạn',
@@ -113,7 +113,8 @@ var CONFIG = {
   API_BASE:      'https://api.b.ai/v1',
   API_KEY:       'sk-cgie46iv00dc3aqatqarqqx5zdb7z3n9',
   MODEL:         'deepseek-v4-flash',
-  MODEL_CHAIN:   ['deepseek-v4-flash','deepseek-v4-flash-0731','deepseek-v4','deepseek-chat','gpt-5.2'],
+  SECONDARY_MODEL:'hy3',                     // Tencent Hy3 trên B.AI, dùng chung API key
+  MODEL_CHAIN:   ['deepseek-v4-flash','hy3','deepseek-v4-flash-0731','deepseek-v4','deepseek-chat','gpt-5.2'],
   TEMPERATURE:   0.7,
   MAX_TOKENS:    4000,
   SEND_IMAGE:    false,
@@ -168,7 +169,7 @@ var CONFIG = {
   HISTORY_TURNS: 12,
   MAX_SESSIONS:  30,
 
-  WELCOME: 'Chào bạn, Ly Ly là trợ lý BGĐ công ty TP DP Cao Mai chúng ta nhe! Ly ly có thể tư vấn các câu hỏi, đính kèm PDF / Word / Excel / ảnh, hoặc bật 🌐 Nghiên cứu web để mình tự vào các trang chuyên ngành lấy dữ liệu.',
+  WELCOME: 'Chào bạn, Ly Ly là trợ lý BGĐ công ty TM DP Cao Mai chúng ta nhe! Ly ly có thể tư vấn các câu hỏi, đính kèm PDF / Word / Excel / ảnh, hoặc bật 🌐 Nghiên cứu web để mình tự vào các trang chuyên ngành lấy dữ liệu.',
 
   SYSTEM_PROMPT: [
     'Ly Ly là trợ lý của BGĐ CÔNG TY TM DP Cao Mai nhé!',
@@ -628,8 +629,10 @@ function build(){
         '<div class="fld"><label>Địa chỉ API (gốc)</label><input data-f="base" placeholder="https://api.b.ai/v1">' +
           '<p class="tip">Nếu trình duyệt báo lỗi CORS, dựng Cloudflare Worker làm cầu nối rồi dán địa chỉ Worker vào đây.</p></div>' +
         '<div class="fld"><label>Khóa API</label><input data-f="key" type="password" autocomplete="off"></div>' +
-        '<div class="fld"><label>Model</label><input data-f="model" placeholder="deepseek-v4-flash">' +
-          '<p class="tip">Model báo không tồn tại thì tự thử: ' + esc(CONFIG.MODEL_CHAIN.join(' → ')) + '</p></div>' +
+        '<div class="fld"><label>AI phân tích</label><select data-f="model">' +
+          '<option value="' + esc(CONFIG.MODEL) + '">AI chính</option>' +
+          '<option value="' + esc(CONFIG.SECONDARY_MODEL) + '">AI phụ</option>' +
+          '</select><p class="tip">Hai AI dùng chung địa chỉ và khóa API B.AI. Nếu AI đang chọn không khả dụng, hệ thống sẽ tự chuyển sang AI còn lại.</p></div>' +
         '<div class="row2">' +
           '<div class="fld"><label>Độ sáng tạo (0–2)</label><input data-f="temp" type="number" min="0" max="2" step="0.1"></div>' +
           '<div class="fld"><label>Độ dài tối đa</label><input data-f="maxTok" type="number" min="256" max="32000" step="256"></div>' +
@@ -1751,7 +1754,8 @@ function openHistory(){
    ============================================================ */
 function f(name){ return el.ovSet.querySelector('[data-f="' + name + '"]'); }
 function fillSettings(){
-  f('base').value = AI.base; f('key').value = AI.key; f('model').value = AI.model;
+  f('base').value = AI.base; f('key').value = AI.key;
+  f('model').value = AI.model === CONFIG.SECONDARY_MODEL ? CONFIG.SECONDARY_MODEL : CONFIG.MODEL;
   f('temp').value = AI.temp; f('maxTok').value = AI.maxTok;
   f('sendImage').checked = !!AI.sendImage; f('sysPrompt').value = AI.sysPrompt;
   f('reader').value = AI.reader; f('rounds').value = AI.rounds; f('openN').value = AI.openN;
@@ -1786,7 +1790,7 @@ function saveSettings(){
   readSettings();
   state.setTouched = false;
   el.ovSet.classList.remove('open');            // đóng bảng trước khi in vào khung chat
-  addMsg('sys','Đã lưu cài đặt. Model: ' + AI.model + (fbOn() ? ' · Firebase đã khai' : ''));
+  addMsg('sys','Đã lưu cài đặt AI.' + (fbOn() ? ' · Firebase đã khai' : ''));
   if (fbOn()) fbPushConfig().catch(function(e){ notice('Cài đặt chưa lên được Firebase: ' + (e.message || e)); });
 }
 function resetSettings(){
@@ -1802,14 +1806,13 @@ function resetSettings(){
 function testConnection(){
   el.ovSet.classList.remove('open');
   var k = cleanKey(f('key').value || AI.key);
-  var line = addMsg('sys','Đang kiểm tra kết nối tới ' + (f('base').value || AI.base) + ' …');
+  var line = addMsg('sys','Đang kiểm tra kết nối AI…');
   hfetch(String(f('base').value || AI.base).replace(/\/+$/,'') + '/chat/completions', {
     method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer ' + k},
     body: JSON.stringify({model:(f('model').value || AI.model), messages:[{role:'user',content:'ping'}], max_tokens:8, stream:false})
   }, 25000).then(function(r){ return r.text().then(function(t){ return {ok:r.ok, status:r.status, t:t}; }); })
   .then(function(res){
-    line.textContent = (res.ok && !AUTH_ERR.test(res.t) ? '✅ Kết nối tốt. ' : '⚠️ ') +
-      'HTTP ' + res.status + ' · khóa ' + k.length + ' ký tự (' + (k.slice(0,6) || '—') + '…) · ' + res.t.slice(0,220);
+    line.textContent = (res.ok && !AUTH_ERR.test(res.t) ? '✅ Kết nối AI tốt.' : '⚠️ Kết nối AI chưa thành công (HTTP ' + res.status + ').');
   }).catch(function(e){ line.textContent = '❌ ' + friendlyError(e); });
 }
 
