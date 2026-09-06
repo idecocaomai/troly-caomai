@@ -78,7 +78,7 @@
    ============================================================ */
 var CONFIG = {
   ID:            'ideco-chao-ban',
-  BUILD_REV:     '20260830-7.3-QWEN38-GLM53-BAI-FALLBACK',               // in ra Console để biết trình duyệt nạp đúng bản
+  BUILD_REV:     '20260906-7.5-PROJECT-UI-CLEAN',               // in ra Console để biết trình duyệt nạp đúng bản
 
   BRAND:         'IDECO',
   LAUNCH_TEXT:   'Chào Bạn',
@@ -333,7 +333,7 @@ var curProj = '';       // id project đang chọn ('' = không dùng project n�
 
 function applyCfgObj(o){
   if (!o) return;
-  ['base','key','model','sysPrompt','fbUrl','fbNode','reader','siteHints','qwenBase','qwenKey','qwenRegion','qwenFlashBase','qwenFlashKey','projectModel'].forEach(function(k){
+  ['base','key','model','sysPrompt','fbUrl','fbNode','reader','siteHints','qwenBase','qwenKey','qwenRegion','qwenFlashBase','qwenFlashKey'].forEach(function(k){
     if (typeof o[k] === 'string' && o[k].trim()) AI[k] = o[k].trim();
   });
   if (typeof o.temp === 'number') AI.temp = o.temp;
@@ -348,6 +348,8 @@ function applyCfgObj(o){
   try{ applyCfgObj(JSON.parse(lsGet(LS.cfg, 'null'))); }catch(e){}
   try{ projects = JSON.parse(lsGet(LS.proj, '{}')) || {}; }catch(e){ projects = {}; }
   curProj = lsGet(LS.cur, '');
+  // V7.4 PROJECT SAFE: không cho cấu hình projectModel cũ trong localStorage/Firebase ép Project sang B.AI.
+  AI.projectModel = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
   // Địa chỉ Firebase trong file mới phải THẮNG giá trị cũ đã lưu trong máy
   if (lsGet(LS.fb, '') !== CONFIG.FB_REV){
     AI.fbUrl = CONFIG.FB_URL; AI.fbNode = CONFIG.FB_NODE;
@@ -407,7 +409,7 @@ function fbPull(){
       var c = data.config;
       if (!CONFIG.FB_SYNC_KEY){ delete c.key; delete c.qwenKey; delete c.qwenFlashKey; }
       // KHÔNG để cấu hình từ máy chủ đè lên ô người dùng đang sửa
-      if (!state.setTouched){ applyCfgObj(c); saveCfg(); got.cfg = true; }
+      if (!state.setTouched){ applyCfgObj(c); AI.projectModel = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL; saveCfg(); got.cfg = true; }
     }
     if (data.projects && typeof data.projects === 'object'){
       Object.keys(data.projects).forEach(function(id){
@@ -772,7 +774,7 @@ function build(){
         '<div class="fld"><label>Khóa API</label><input data-f="key" type="password" autocomplete="off"></div>' +
         '<div class="fld"><label>Định tuyến AI tự động · HYBRID + PROJECT LOCK</label>' +
           '<div style="padding:12px 14px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;line-height:1.65;color:#0f172a">' +
-            '<b>🎯 Project:</b> Qwen 3.8 Max mặc định · Qwen 3.8 Flash B.AI dự phòng tự động<br>' +
+            '<b>🎯 Project:</b> Qwen 3.8 Max cố định qua QwenCloud/Worker · tách khỏi lỗi khóa B.AI<br>' +
             '<b>💬 Chat tự do:</b> Tencent HY3 · ưu tiên tốc độ, no_think<br>' +
             '<b>🔬 Phân tích sâu:</b> DeepSeek V4 Flash<br>' +
             '<b>🌐 Nghiên cứu web:</b> DeepSeek V4 Flash đọc và đối chiếu web; giao diện chỉ hiện kết quả tổng hợp<br>' +
@@ -797,13 +799,9 @@ function build(){
           '</table>' +
         '</div>' +
 
-        '<div class="fld"><label>AI ưu tiên khi bật Project</label><select data-f="projectModel">' +
-          '<option value="qwen3.8-max">Qwen 3.8 Max — QwenCloud (khuyến nghị)</option>' +
-          '<option value="qwen3.8-flash">Qwen 3.8 Flash — B.AI (nhanh / dự phòng)</option>' +
-          '<option value="glm-5.3-flash">GLM-5.3-Flash — B.AI (reasoning mạnh / dự phòng)</option>' +
-          '<option value="deepseek-v4-flash">DeepSeek V4 Flash</option>' +
-          '<option value="hy3">Tencent HY3</option>' +
-        '</select></div>' +
+        '<div class="fld"><label>AI dùng khi bật Project</label><select data-f="projectModel" disabled>' +
+          '<option value="qwen3.8-max">Qwen 3.8 Max — QwenCloud / Worker (PROJECT SAFE)</option>' +
+        '</select><p class="tip">Project được khóa sang tuyến Qwen độc lập để cấu hình B.AI cũ/401 không làm Project lỗi. Các model B.AI vẫn dùng cho Chat/Deep/Web khi phù hợp.</p></div>' +
         '<div class="fld"><label class="sw"><input data-f="autoQwenFallback" type="checkbox"> Tự chuyển Qwen 3.8 Max → Qwen 3.8 Flash B.AI khi Max hết quota/lỗi</label>' +
           '<p class="tip">Bật: Max lỗi/429/quota/timeout/không khả dụng sẽ thử Qwen Flash B.AI → GLM-5.3-Flash B.AI → DeepSeek → HY3. Tắt: bỏ qua Qwen Flash khi Max lỗi nhưng GLM vẫn là đường dự phòng B.AI; vẫn có thể chọn từng model trực tiếp ở danh sách phía trên.</p></div>' +
         '<div class="row2">' +
@@ -1144,10 +1142,10 @@ function applyProject(id, announce){
   renderProjList();
 
   var p = curProj ? projects[curProj] : null;
+  /* V7.5 UI CLEAN: không chèn thông báo PROJECT LOCK / TẮT DỰ ÁN vào lịch sử chat.
+     Trạng thái project vẫn hiển thị ở thanh ĐANG ÁP DỤNG phía trên và logic Project Lock vẫn giữ nguyên. */
   if (announce){
-    addMsg('sys', p
-      ? '🔒 PROJECT LOCK: ' + p.name + '. AI ưu tiên tuyệt đối chỉ dẫn dự án; web/file chỉ là dữ liệu hỗ trợ. Bấm lại ÁP DỤNG của chính dự án này để tắt.'
-      : '💬 ĐÃ TẮT DỰ ÁN — CHAT TỰ DO. AI không còn áp dụng chỉ dẫn riêng của dự án.');
+    console.log('[' + CONFIG.ID + '] Project ' + (p ? ('ON: ' + p.name) : 'OFF') + ' (ẩn thông báo khỏi khung chat)');
   }
 }
 function renderProjRail(){
@@ -1847,6 +1845,8 @@ function isQwenCloudModel(model){ return /^qwen3\.8-max$/i.test(String(model || 
 function isBaiQwenFlashModel(model){ return /^qwen3\.8-flash$/i.test(String(model || '')); }
 function isBaiGlmFlashModel(model){ return /^glm-5\.3-flash$/i.test(String(model || '')); }
 function isQwenModel(model){ return isQwenCloudModel(model) || isBaiQwenFlashModel(model); }
+function providerForModel(model){ return isQwenCloudModel(model) ? 'qwencloud' : 'bai'; }
+function isAuthFailure(e){ var m=String(e && (e.message||e))+' '+String(e && e.body || ''); return Number(e && e.status)===401 || AUTH_ERR.test(m); }
 function qwenBaseHost(){ return String(AI.qwenBase || CONFIG.QWEN_PROXY_BASE || '').replace(/\/+$/,''); }
 function qwenApiUrl(path){
   var u = qwenBaseHost() + path;
@@ -1871,7 +1871,7 @@ function hasKeyForModel(model){ return !!keyForModel(model); }
 
 /* V7 PROJECT LOCK: Project đang bật THẮNG định tuyến theo mode/file. */
 function routedModel(mode, hasDocs, imageMode){
-  if (curProj && projInstruction()) return AI.projectModel || CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
+  if (curProj && projInstruction()) return CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
   if (imageMode === true) return CONFIG.VISION_MODEL;
   if (mode === 'deep' || mode === 'web' || hasDocs) return CONFIG.DEEPSEEK_MODEL;
   return CONFIG.CHAT_MODEL || CONFIG.MODEL;
@@ -1889,12 +1889,14 @@ function fallbackChain(preferred){
     push(CONFIG.DEEPSEEK_MODEL);
     push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (isBaiQwenFlashModel(p)){
-    // Chọn Qwen Flash trực tiếp: không quay ngược Max; GLM là tuyến kế tiếp.
+    // B.AI lỗi xác thực thì còn tuyến QwenCloud độc lập để cứu.
+    push(CONFIG.QWEN_MODEL);
     push(CONFIG.GLM_FLASH_MODEL);
     push(CONFIG.DEEPSEEK_MODEL);
     push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (isBaiGlmFlashModel(p)){
-    // Chọn GLM trực tiếp: giữ GLM là chính, sau đó mới DeepSeek/HY3.
+    // GLM dùng B.AI; đặt QwenCloud ngay sau để tránh lặp 401 trên cùng provider.
+    push(CONFIG.QWEN_MODEL);
     push(CONFIG.DEEPSEEK_MODEL);
     push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (p === CONFIG.VISION_MODEL){
@@ -1976,8 +1978,13 @@ function callOnce(msgs, model, maxTok, ms, extra){
 }
 function callOnceRobust(msgs, preferredModel, maxTok, ms, extra){
   var chain=fallbackChain(preferredModel);
-  var i=0,lastErr=null;
+  var i=0,lastErr=null,badAuth={};
+  function nextUsable(){
+    while(i < chain.length && badAuth[providerForModel(chain[i])]) i++;
+    return i < chain.length;
+  }
   function attempt(withExtra){
+    if(!nextUsable()) throw (lastErr || new Error('Không còn tuyến API khả dụng sau lỗi xác thực.'));
     var m=chain[i];
     return callOnce(msgs,m,maxTok,ms,withExtra).then(function(t){
       if (String(t||'').trim()) return t;
@@ -1985,7 +1992,9 @@ function callOnceRobust(msgs, preferredModel, maxTok, ms, extra){
     }).catch(function(e){
       lastErr=e; var msg=String(e && (e.message||e));
       if (withExtra && /400|response_format|json/i.test(msg)) return attempt(null);
-      if (i < chain.length-1){ i++; return attempt(extra); }
+      if (isAuthFailure(e)){ var ep=providerForModel(m); badAuth[ep] = true; try{ e.provider = ep; }catch(_e){} }
+      i++;
+      if (nextUsable()) return attempt(extra);
       throw lastErr;
     });
   }
@@ -2309,8 +2318,10 @@ function send(){
     state.files = []; renderFiles();
 
     var chain = fallbackChain(model);
-    var idx = 0;
+    var idx = 0, badAuth = {};
+    function nextUsable(){ while(idx < chain.length && badAuth[providerForModel(chain[idx])]) idx++; return idx < chain.length; }
     function attempt(){
+      if (!nextUsable()) return Promise.reject(new Error('Không còn tuyến API khả dụng sau lỗi xác thực.'));
       model = chain[idx];
       return callAPI(msgs, model, onDelta, onThink).then(function(full){
         if (acc.trim() || String(full || '').trim()) return full;
@@ -2323,15 +2334,22 @@ function send(){
         });
       }).catch(function(e){
         var m = String(e.message || e) + ' ' + (e.body || '');
-        if (idx < chain.length - 1 && !acc){
+        if (!acc){
           var fromModel = chain[idx];
-          idx++;
-          var toModel = chain[idx];
-          console.warn('[' + CONFIG.ID + '] đổi model ' + fromModel + ' → ' + toModel);
-          if (isQwenCloudModel(fromModel) && isBaiQwenFlashModel(toModel)){
-            say('↻ Qwen 3.8 Max đang hết hạn mức hoặc không khả dụng — tự chuyển sang Qwen 3.8 Flash B.AI…');
+          if (isAuthFailure(e)){
+            var failedProvider = e.provider || providerForModel(fromModel);
+            badAuth[failedProvider] = true;
+            console.warn('[' + CONFIG.ID + '] khóa provider ' + failedProvider + ' sau HTTP 401; bỏ qua các model dùng cùng khóa.');
           }
-          return attempt();
+          idx++;
+          if (nextUsable()){
+            var toModel = chain[idx];
+            console.warn('[' + CONFIG.ID + '] đổi model ' + fromModel + ' → ' + toModel);
+            if (isQwenCloudModel(fromModel) && isBaiQwenFlashModel(toModel)){
+              say('↻ Qwen 3.8 Max đang hết hạn mức hoặc không khả dụng — tự chuyển sang tuyến dự phòng…');
+            }
+            return attempt();
+          }
         }
         throw e;
       });
@@ -2570,7 +2588,7 @@ function f(name){ return el.ovSet.querySelector('[data-f="' + name + '"]'); }
 function fillSettings(){
   f('base').value = AI.base; f('key').value = AI.key;
   f('model').value = CONFIG.CHAT_MODEL || CONFIG.MODEL;
-  f('projectModel').value = AI.projectModel || CONFIG.PROJECT_MODEL;
+  f('projectModel').value = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
   f('autoQwenFallback').checked = AI.autoQwenFallback !== false;
   f('qwenBase').value = AI.qwenBase || CONFIG.QWEN_PROXY_BASE;
   f('qwenKey').value = AI.qwenKey || CONFIG.QWEN_API_KEY;
@@ -2593,7 +2611,7 @@ function readSettings(){
   AI.base = (f('base').value || CONFIG.API_BASE).trim().replace(/\/+$/,'');
   AI.key = cleanKey(f('key').value);
   AI.model = CONFIG.CHAT_MODEL || CONFIG.MODEL; // model thật được routedModel() chọn theo chế độ
-  AI.projectModel = (f('projectModel').value || CONFIG.PROJECT_MODEL).trim();
+  AI.projectModel = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
   AI.autoQwenFallback = !!f('autoQwenFallback').checked;
   AI.qwenBase = (f('qwenBase').value || CONFIG.QWEN_PROXY_BASE).trim().replace(/\/+$/,'');
   AI.qwenKey = cleanKey(f('qwenKey').value || AI.qwenKey || CONFIG.QWEN_API_KEY);
