@@ -37,7 +37,6 @@
   .home-project-card{padding:13px;border-radius:16px;border:1px solid rgba(89,186,255,.35);background:rgba(6,59,111,.68);box-shadow:0 7px 18px rgba(0,0,0,.2)}
   .home-project-card.active{border-color:#63e6be;background:linear-gradient(180deg,rgba(11,111,96,.72),rgba(4,63,75,.78));box-shadow:0 0 0 1px rgba(99,230,190,.25),0 8px 22px rgba(0,0,0,.24)}
   .home-project-name{color:#fff;font-size:19px;font-weight:900;line-height:1.25;text-shadow:0 1px 5px rgba(0,0,0,.4)}
-  .home-project-inst{margin-top:6px;color:#d8efff;font-size:13px;line-height:1.42;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .home-project-apply{all:unset!important;box-sizing:border-box!important;display:block!important;width:100%!important;min-height:0!important;margin-top:10px!important;padding:10px 12px!important;text-align:center!important;border-radius:11px!important;cursor:pointer!important;font-size:14px!important;font-weight:900!important;color:#fff!important;background:linear-gradient(180deg,#1686ff,#0763ce)!important;box-shadow:0 5px 13px rgba(0,85,180,.34)!important}
   .home-project-apply:hover{filter:brightness(1.08)}
   .home-project-apply.active{background:linear-gradient(180deg,#17a673,#0c7758)!important}
@@ -52,7 +51,7 @@
     .hero-title{top:14px;font-size:clamp(18px,5.4vw,28px);-webkit-text-stroke:1px #058cff;line-height:1.18}
     .home-projects{top:86px;left:10px;bottom:auto;width:min(310px,86vw);max-height:44vh;border-radius:17px}
     .home-projects-head{padding:12px 13px 10px}.home-projects-head b{font-size:18px}.home-projects-head span{font-size:12px}
-    .home-projects-body{padding:9px;gap:8px}.home-project-card{padding:10px}.home-project-inst{display:none}
+    .home-projects-body{padding:9px;gap:8px}.home-project-card{padding:10px}
   }
 </style>
 </head>
@@ -78,7 +77,7 @@
    ============================================================ */
 var CONFIG = {
   ID:            'ideco-chao-ban',
-  BUILD_REV:     '20260906-7.5-PROJECT-UI-CLEAN',               // in ra Console để biết trình duyệt nạp đúng bản
+  BUILD_REV:     '20260906-8.0-GEMINI38-KIE-DAYLOCK-QWEN',               // in ra Console để biết trình duyệt nạp đúng bản
 
   BRAND:         'IDECO',
   LAUNCH_TEXT:   'Chào Bạn',
@@ -122,6 +121,16 @@ var CONFIG = {
   QWEN_FLASH_API_KEY: 'sk-1b8six06o1mgya2sk6db1u4xuyaepgq0',
   QWEN_FLASH_MODEL: 'qwen3.8-flash',
   QWEN_AUTO_FALLBACK: true,
+
+  /* ---- Gemini 3.8 Flash — Kie.ai, endpoint OpenAI-compatible ----
+     Khóa để trống mặc định; nhập trong ⚙ Cài đặt. Project có thể chọn Qwen hoặc Gemini. */
+  KIE_BASE:       'https://api.kie.ai',
+  KIE_API_KEY:    '',
+  KIE_MODEL:      'gemini-3-8-flash-openai',
+
+  /* ---- Giới hạn theo ngày (1=Thứ 2 ... 7=Chủ nhật) ----
+     Ngày nằm trong mảng này: các tác vụ CHAT/DEEP/WEB/PROJECT chỉ dùng Qwen 3.8 Max. */
+  LOCK_DAYS:      [],
 
   /* ---- GLM-5.3-Flash — B.AI: Flash reasoning mạnh / dự phòng bổ sung ----
      Dùng chung API Base + API key B.AI chính (AI.base / AI.key).
@@ -320,6 +329,8 @@ var AI = {
   base: CONFIG.API_BASE, key: CONFIG.API_KEY, model: CONFIG.MODEL,
   qwenBase: CONFIG.QWEN_PROXY_BASE, qwenKey: CONFIG.QWEN_API_KEY, qwenRegion: CONFIG.QWEN_REGION,
   qwenFlashBase: CONFIG.QWEN_FLASH_BASE, qwenFlashKey: CONFIG.QWEN_FLASH_API_KEY,
+  kieBase: CONFIG.KIE_BASE, kieKey: CONFIG.KIE_API_KEY,
+  lockDays: (CONFIG.LOCK_DAYS || []).slice(),
   autoQwenFallback: CONFIG.QWEN_AUTO_FALLBACK !== false,
   projectModel: CONFIG.PROJECT_MODEL,
   temp: CONFIG.TEMPERATURE, maxTok: CONFIG.MAX_TOKENS,
@@ -333,9 +344,11 @@ var curProj = '';       // id project đang chọn ('' = không dùng project n�
 
 function applyCfgObj(o){
   if (!o) return;
-  ['base','key','model','sysPrompt','fbUrl','fbNode','reader','siteHints','qwenBase','qwenKey','qwenRegion','qwenFlashBase','qwenFlashKey'].forEach(function(k){
+  ['base','key','model','sysPrompt','fbUrl','fbNode','reader','siteHints','qwenBase','qwenKey','qwenRegion','qwenFlashBase','qwenFlashKey','kieBase','kieKey'].forEach(function(k){
     if (typeof o[k] === 'string' && o[k].trim()) AI[k] = o[k].trim();
   });
+  if (typeof o.projectModel === 'string') AI.projectModel = normalizeProjectModel(o.projectModel);
+  if (Array.isArray(o.lockDays)) AI.lockDays = o.lockDays.map(Number).filter(function(d){ return d>=1 && d<=7; });
   if (typeof o.temp === 'number') AI.temp = o.temp;
   if (typeof o.maxTok === 'number') AI.maxTok = o.maxTok;
   if (typeof o.rounds === 'number') AI.rounds = o.rounds;
@@ -348,8 +361,8 @@ function applyCfgObj(o){
   try{ applyCfgObj(JSON.parse(lsGet(LS.cfg, 'null'))); }catch(e){}
   try{ projects = JSON.parse(lsGet(LS.proj, '{}')) || {}; }catch(e){ projects = {}; }
   curProj = lsGet(LS.cur, '');
-  // V7.4 PROJECT SAFE: không cho cấu hình projectModel cũ trong localStorage/Firebase ép Project sang B.AI.
-  AI.projectModel = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
+  // V8 PROJECT SAFE: chỉ cho Project dùng Qwen 3.8 Max hoặc Gemini 3.8 Flash Kie.ai.
+  AI.projectModel = normalizeProjectModel(AI.projectModel);
   // Địa chỉ Firebase trong file mới phải THẮNG giá trị cũ đã lưu trong máy
   if (lsGet(LS.fb, '') !== CONFIG.FB_REV){
     AI.fbUrl = CONFIG.FB_URL; AI.fbNode = CONFIG.FB_NODE;
@@ -407,9 +420,9 @@ function fbPull(){
     var got = {cfg:false, proj:0};
     if (data.config){
       var c = data.config;
-      if (!CONFIG.FB_SYNC_KEY){ delete c.key; delete c.qwenKey; delete c.qwenFlashKey; }
+      if (!CONFIG.FB_SYNC_KEY){ delete c.key; delete c.qwenKey; delete c.qwenFlashKey; delete c.kieKey; }
       // KHÔNG để cấu hình từ máy chủ đè lên ô người dùng đang sửa
-      if (!state.setTouched){ applyCfgObj(c); AI.projectModel = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL; saveCfg(); got.cfg = true; }
+      if (!state.setTouched){ applyCfgObj(c); AI.projectModel = normalizeProjectModel(AI.projectModel); saveCfg(); got.cfg = true; }
     }
     if (data.projects && typeof data.projects === 'object'){
       Object.keys(data.projects).forEach(function(id){
@@ -430,9 +443,10 @@ function fbPushConfig(){
            sendImage:AI.sendImage, reader:AI.reader, rounds:AI.rounds, openN:AI.openN,
            allowEngine:AI.allowEngine, siteHints:AI.siteHints,
            qwenBase:AI.qwenBase, qwenRegion:AI.qwenRegion,
-           qwenFlashBase:AI.qwenFlashBase, autoQwenFallback:AI.autoQwenFallback,
-           projectModel:AI.projectModel, ts:Date.now()};
-  if (CONFIG.FB_SYNC_KEY){ c.key = AI.key; c.qwenKey = AI.qwenKey; c.qwenFlashKey = AI.qwenFlashKey; }
+           qwenFlashBase:AI.qwenFlashBase, kieBase:AI.kieBase,
+           lockDays:(AI.lockDays || []).slice(), autoQwenFallback:AI.autoQwenFallback,
+           projectModel:normalizeProjectModel(AI.projectModel), ts:Date.now()};
+  if (CONFIG.FB_SYNC_KEY){ c.key = AI.key; c.qwenKey = AI.qwenKey; c.qwenFlashKey = AI.qwenFlashKey; c.kieKey = AI.kieKey; }
   return fbWrite('/config', c, 'PATCH');
 }
 function fbPushProject(id){
@@ -641,6 +655,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-vis
 .fld textarea{min-height:110px;resize:vertical;line-height:1.55}
 .fld .tip{font-size:11.5px;color:#98a1af;margin:5px 0 0;line-height:1.5}
 .row2{display:flex;gap:10px}.row2>*{flex:1}
+.daygrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:7px}.daygrid label{display:flex;align-items:center;gap:7px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer}.daygrid input{width:auto!important;margin:0}.daystatus{margin-top:8px;padding:9px 11px;border-radius:10px;background:#eff6ff;color:#1e3a8a;font-size:12px;line-height:1.45}@media(max-width:560px){.daygrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .sw{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink)}
 .sw input{width:auto}
 .btn{padding:9px 14px;border-radius:10px;background:var(--red);color:#fff;font-weight:700;font-size:13.5px}
@@ -774,16 +789,16 @@ function build(){
         '<div class="fld"><label>Khóa API</label><input data-f="key" type="password" autocomplete="off"></div>' +
         '<div class="fld"><label>Định tuyến AI tự động · HYBRID + PROJECT LOCK</label>' +
           '<div style="padding:12px 14px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;line-height:1.65;color:#0f172a">' +
-            '<b>🎯 Project:</b> Qwen 3.8 Max cố định qua QwenCloud/Worker · tách khỏi lỗi khóa B.AI<br>' +
+            '<b>🎯 Project:</b> Qwen 3.8 Max hoặc Gemini 3.8 Flash Kie.ai · chọn trong Cài đặt<br>' +
             '<b>💬 Chat tự do:</b> Tencent HY3 · ưu tiên tốc độ, no_think<br>' +
             '<b>🔬 Phân tích sâu:</b> DeepSeek V4 Flash<br>' +
             '<b>🌐 Nghiên cứu web:</b> DeepSeek V4 Flash đọc và đối chiếu web; giao diện chỉ hiện kết quả tổng hợp<br>' +
             '<b>📄 Tài liệu:</b> Project đang bật → theo model Project; không Project → DeepSeek V4 Flash' +
           '</div>' +
           '<input data-f="model" type="hidden" value="hy3">' +
-          '<p class="tip">Khi Project đang bật, chỉ dẫn Project được khóa ở mức ưu tiên cao nhất. Nếu Qwen 3.8 Max/QwenCloud hết quota hoặc lỗi, hệ thống có thể tự chuyển sang Qwen 3.8 Flash B.AI.</p></div>' +
+          '<p class="tip">Khi Project đang bật, chỉ dẫn Project vẫn được khóa ở mức ưu tiên cao nhất. Ngày bị khóa theo lịch sẽ luôn ép về Qwen 3.8 Max.</p></div>' +
 
-        '<div class="sec">Bảng model Qwen 3.8 + GLM B.AI</div>' +
+        '<div class="sec">Bảng model Qwen 3.8 + Gemini 3.8 + GLM</div>' +
         '<div style="overflow:auto;border:1px solid #cbd5e1;border-radius:12px;margin-bottom:12px">' +
           '<table style="width:100%;border-collapse:collapse;font-size:13px;line-height:1.45">' +
             '<thead><tr style="background:#f1f5f9;text-align:left">' +
@@ -793,17 +808,19 @@ function build(){
             '</tr></thead>' +
             '<tbody>' +
               '<tr><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0"><b>Qwen 3.8 Max</b></td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">QwenCloud / Worker</td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">Chính</td></tr>' +
-              '<tr><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0"><b>Qwen 3.8 Flash</b></td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">B.AI</td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">Dự phòng / chọn trực tiếp</td></tr>' +
-              '<tr><td style="padding:9px 10px"><b>GLM-5.3-Flash</b></td><td style="padding:9px 10px">B.AI</td><td style="padding:9px 10px">Dự phòng mạnh / chọn trực tiếp</td></tr>' +
+              '<tr><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0"><b>Gemini 3.8 Flash</b></td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">Kie.ai</td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">Project / dự phòng độc lập</td></tr>' +
+              '<tr><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0"><b>Qwen 3.8 Flash</b></td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">B.AI</td><td style="padding:9px 10px;border-bottom:1px solid #e2e8f0">Dự phòng</td></tr>' +
+              '<tr><td style="padding:9px 10px"><b>GLM-5.3-Flash</b></td><td style="padding:9px 10px">B.AI</td><td style="padding:9px 10px">Dự phòng mạnh</td></tr>' +
             '</tbody>' +
           '</table>' +
         '</div>' +
 
-        '<div class="fld"><label>AI dùng khi bật Project</label><select data-f="projectModel" disabled>' +
-          '<option value="qwen3.8-max">Qwen 3.8 Max — QwenCloud / Worker (PROJECT SAFE)</option>' +
-        '</select><p class="tip">Project được khóa sang tuyến Qwen độc lập để cấu hình B.AI cũ/401 không làm Project lỗi. Các model B.AI vẫn dùng cho Chat/Deep/Web khi phù hợp.</p></div>' +
-        '<div class="fld"><label class="sw"><input data-f="autoQwenFallback" type="checkbox"> Tự chuyển Qwen 3.8 Max → Qwen 3.8 Flash B.AI khi Max hết quota/lỗi</label>' +
-          '<p class="tip">Bật: Max lỗi/429/quota/timeout/không khả dụng sẽ thử Qwen Flash B.AI → GLM-5.3-Flash B.AI → DeepSeek → HY3. Tắt: bỏ qua Qwen Flash khi Max lỗi nhưng GLM vẫn là đường dự phòng B.AI; vẫn có thể chọn từng model trực tiếp ở danh sách phía trên.</p></div>' +
+        '<div class="fld"><label>AI dùng khi bật Project</label><select data-f="projectModel">' +
+          '<option value="qwen3.8-max">Qwen 3.8 Max — QwenCloud / Worker (khuyến nghị)</option>' +
+          '<option value="gemini-3-8-flash-openai">Gemini 3.8 Flash — Kie.ai</option>' +
+        '</select><p class="tip">Chỉ cho phép Qwen hoặc Gemini trong Project để tránh cấu hình B.AI cũ gây lỗi 401. Nếu hôm nay là ngày khóa, hệ thống tự ép về Qwen 3.8 Max.</p></div>' +
+        '<div class="fld"><label class="sw"><input data-f="autoQwenFallback" type="checkbox"> Tự dùng các tuyến dự phòng khi Qwen 3.8 Max hết quota/lỗi</label>' +
+          '<p class="tip">Bật: nếu Max lỗi, hệ thống ưu tiên Gemini 3.8 Flash Kie.ai (khi có khóa), rồi Qwen Flash/GLM/DeepSeek/HY3. Tắt: bỏ qua Qwen Flash B.AI nhưng vẫn giữ các tuyến độc lập khác. Ngày bị khóa theo lịch không dùng fallback: chỉ Qwen 3.8 Max.</p></div>' +
         '<div class="row2">' +
           '<div class="fld"><label>QwenCloud Worker / Proxy</label><input data-f="qwenBase" placeholder="https://...workers.dev"></div>' +
           '<div class="fld"><label>Khóa Qwen 3.8 Max / DashScope</label><input data-f="qwenKey" type="password" autocomplete="off"></div>' +
@@ -813,6 +830,26 @@ function build(){
           '<div class="fld"><label>Khóa Qwen 3.8 Flash B.AI</label><input data-f="qwenFlashKey" type="password" autocomplete="off"></div>' +
         '</div>' +
         '<p class="tip" style="margin-top:-5px;margin-bottom:14px">Khóa Qwen 3.8 Flash được tách riêng để không ảnh hưởng khóa B.AI đang dùng cho HY3/DeepSeek. Nếu để trống, hệ thống dùng khóa B.AI chính.</p>' +
+        '<div class="row2">' +
+          '<div class="fld"><label>Kie.ai API Base</label><input data-f="kieBase" placeholder="https://api.kie.ai"></div>' +
+          '<div class="fld"><label>Khóa API Gemini 3.8 Flash / Kie.ai</label><input data-f="kieKey" type="password" autocomplete="off" placeholder="Dán API key Kie.ai"></div>' +
+        '</div>' +
+        '<p class="tip" style="margin-top:-5px;margin-bottom:14px">Gemini dùng endpoint OpenAI-compatible riêng của Kie.ai. Khóa Kie được lưu cùng cấu hình và đồng bộ Firebase khi bật đồng bộ khóa.</p>' +
+
+        '<div class="sec">Giới hạn sử dụng theo ngày</div>' +
+        '<div class="fld"><label>Chọn ngày KHÓA các model khác — chỉ cho phép Qwen 3.8 Max chạy</label>' +
+          '<div class="daygrid" data-daygrid>' +
+            '<label><input type="checkbox" data-lockday="1"> Thứ 2</label>' +
+            '<label><input type="checkbox" data-lockday="2"> Thứ 3</label>' +
+            '<label><input type="checkbox" data-lockday="3"> Thứ 4</label>' +
+            '<label><input type="checkbox" data-lockday="4"> Thứ 5</label>' +
+            '<label><input type="checkbox" data-lockday="5"> Thứ 6</label>' +
+            '<label><input type="checkbox" data-lockday="6"> Thứ 7</label>' +
+            '<label><input type="checkbox" data-lockday="7"> Chủ nhật</label>' +
+          '</div>' +
+          '<div class="daystatus" data-daystatus></div>' +
+          '<p class="tip">Ngày bị khóa: Chat, Phân tích sâu, Web và Project đều tự chuyển sang Qwen 3.8 Max. Phân tích ảnh và công cụ tạo ảnh/video vẫn giữ tuyến chuyên dụng của chúng.</p></div>' +
+
         '<div class="row2">' +
           '<div class="fld"><label>Độ sáng tạo (0–2)</label><input data-f="temp" type="number" min="0" max="2" step="0.1"><p class="tip">Trò chuyện thường tự giới hạn tối đa 0.3 để câu trả lời tập trung; Phân tích sâu/Nghiên cứu web vẫn dùng mức bạn chọn.</p></div>' +
           '<div class="fld"><label>Độ dài tối đa</label><input data-f="maxTok" type="number" min="256" max="32000" step="256"></div>' +
@@ -916,7 +953,7 @@ function build(){
   renderHomeProjects();
   applyFont(parseFloat(lsGet(LS.font, CONFIG.CHAT_FONT_PX)) || CONFIG.CHAT_FONT_PX);
   document.body.appendChild(host);              // gắn ĐÚNG MỘT LẦN, không quan sát DOM
-  console.log('[' + CONFIG.ID + '] build ' + CONFIG.BUILD_REV + ' · PROJECT=' + AI.projectModel + ' · chat=' + CONFIG.CHAT_MODEL + ' · deep-web=' + CONFIG.DEEPSEEK_MODEL);
+  console.log('[' + CONFIG.ID + '] build ' + CONFIG.BUILD_REV + ' · PROJECT=' + AI.projectModel + ' · Gemini=' + (!!AI.kieKey) + ' · dayLock=' + (AI.lockDays||[]).join(',') + ' · chat=' + CONFIG.CHAT_MODEL + ' · deep-web=' + CONFIG.DEEPSEEK_MODEL);
 
   if (fbOn()){
     fbPull().then(function(g){
@@ -942,6 +979,12 @@ function bind(){
 
   el.psel.addEventListener('change', function(){
     applyProject(el.psel.value, true);
+  });
+  el.ovSet.addEventListener('change', function(ev){
+    if (ev.target && ev.target.hasAttribute('data-lockday')){
+      var days=Array.prototype.slice.call(el.ovSet.querySelectorAll('[data-lockday]:checked')).map(function(cb){return Number(cb.getAttribute('data-lockday'));});
+      var old=AI.lockDays; AI.lockDays=days; updateDayLockStatus(); AI.lockDays=old;
+    }
   });
 
   el.panel.addEventListener('click', function(ev){
@@ -1091,7 +1134,6 @@ function renderHomeProjects(){
     var card = document.createElement('div');
     card.className = 'home-project-card' + (p.id === curProj ? ' active' : '');
     var nm = document.createElement('div'); nm.className = 'home-project-name'; nm.textContent = p.name;
-    var ins = document.createElement('div'); ins.className = 'home-project-inst'; ins.textContent = (p.instruction || '').trim() || 'Chưa có chỉ dẫn riêng cho dự án này.';
     var b = document.createElement('button'); b.type = 'button';
     b.className = 'home-project-apply' + (p.id === curProj ? ' active' : '');
     b.textContent = p.id === curProj ? '✓ ĐANG ÁP DỤNG · BẤM ĐỂ TẮT' : '🎯 ÁP DỤNG';
@@ -1100,7 +1142,7 @@ function renderHomeProjects(){
       applyProject(p.id, true);
       openPanel();
     });
-    card.appendChild(nm); card.appendChild(ins); card.appendChild(b); body.appendChild(card);
+    card.appendChild(nm); card.appendChild(b); body.appendChild(card);
   });
 }
 function renderProjSelect(){
@@ -1111,7 +1153,7 @@ function renderProjSelect(){
   el.psel.value = curProj || '';
   el.psel.classList.toggle('on', !!curProj);
   var p = curProj && projects[curProj] && !projects[curProj].deleted ? projects[curProj] : null;
-  el.sub.textContent = p ? 'Đang áp dụng: ' + p.name : 'Sẵn sàng';
+  el.sub.textContent = p ? ('Đang áp dụng: ' + p.name + (isDayLocked() ? ' · Qwen 3.8 (ngày khóa)' : '')) : (isDayLocked() ? 'Chế độ hạn chế · Qwen 3.8' : 'Sẵn sàng');
   if (el.activeProj){
     if (p){
       el.activeProj.classList.add('on');
@@ -1161,8 +1203,7 @@ function renderProjRail(){
   }
   list.forEach(function(p){
     var card = h('div','projcard' + (p.id === curProj ? ' cur' : ''));
-    card.innerHTML = '<div class="pn">' + esc(p.name) + '</div>' +
-      '<div class="pi">' + esc((p.instruction || '').trim() || 'Chưa có chỉ dẫn riêng cho dự án này.') + '</div>';
+    card.innerHTML = '<div class="pn">' + esc(p.name) + '</div>';
     var b = h('button','projapply' + (p.id === curProj ? ' cur' : ''), p.id === curProj ? '✓ ĐANG ÁP DỤNG · BẤM ĐỂ TẮT' : '🎯 ÁP DỤNG');
     b.addEventListener('click', function(){ applyProject(p.id, true); });
     card.appendChild(b); el.projRailBody.appendChild(card);
@@ -1844,9 +1885,22 @@ var AUTH_ERR  = /unauthor|authentication failed|invalid.*(key|token)|forbidden|a
 function isQwenCloudModel(model){ return /^qwen3\.8-max$/i.test(String(model || '')); }
 function isBaiQwenFlashModel(model){ return /^qwen3\.8-flash$/i.test(String(model || '')); }
 function isBaiGlmFlashModel(model){ return /^glm-5\.3-flash$/i.test(String(model || '')); }
+function isKieGeminiModel(model){ return /^gemini-3-8-flash-openai$/i.test(String(model || '')); }
 function isQwenModel(model){ return isQwenCloudModel(model) || isBaiQwenFlashModel(model); }
-function providerForModel(model){ return isQwenCloudModel(model) ? 'qwencloud' : 'bai'; }
+function normalizeProjectModel(model){ return isKieGeminiModel(model) ? CONFIG.KIE_MODEL : (CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL); }
+function providerForModel(model){ return isQwenCloudModel(model) ? 'qwencloud' : (isKieGeminiModel(model) ? 'kie' : 'bai'); }
 function isAuthFailure(e){ var m=String(e && (e.message||e))+' '+String(e && e.body || ''); return Number(e && e.status)===401 || AUTH_ERR.test(m); }
+function vnWeekday(){
+  try{
+    var wd=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Ho_Chi_Minh',weekday:'short'}).format(new Date());
+    return {Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7}[wd] || 1;
+  }catch(e){ var d=new Date().getDay(); return d===0?7:d; }
+}
+function isDayLocked(){ return Array.isArray(AI.lockDays) && AI.lockDays.indexOf(vnWeekday())>=0; }
+function scheduledTextModel(model){
+  if (String(model||'') === String(CONFIG.VISION_MODEL||'')) return model;
+  return isDayLocked() ? CONFIG.QWEN_MODEL : model;
+}
 function qwenBaseHost(){ return String(AI.qwenBase || CONFIG.QWEN_PROXY_BASE || '').replace(/\/+$/,''); }
 function qwenApiUrl(path){
   var u = qwenBaseHost() + path;
@@ -1854,14 +1908,17 @@ function qwenApiUrl(path){
   return u;
 }
 function qwenFlashBaseHost(){ return String(AI.qwenFlashBase || CONFIG.QWEN_FLASH_BASE || CONFIG.API_BASE || '').replace(/\/+$/,''); }
+function kieBaseHost(){ return String(AI.kieBase || CONFIG.KIE_BASE || 'https://api.kie.ai').replace(/\/+$/,''); }
 function apiUrlForModel(model){
   if (isQwenCloudModel(model)) return qwenApiUrl('/compatible-mode/v1/chat/completions');
   if (isBaiQwenFlashModel(model)) return qwenFlashBaseHost() + '/chat/completions';
+  if (isKieGeminiModel(model)) return kieBaseHost() + '/gemini-3-8-flash-openai/v1/chat/completions';
   return String(AI.base || '').replace(/\/+$/,'') + '/chat/completions';
 }
 function keyForModel(model){
   if (isQwenCloudModel(model)) return cleanKey(AI.qwenKey);
   if (isBaiQwenFlashModel(model)) return cleanKey(AI.qwenFlashKey || AI.key);
+  if (isKieGeminiModel(model)) return cleanKey(AI.kieKey);
   return cleanKey(AI.key);
 }
 function headersForModel(model){
@@ -1869,52 +1926,45 @@ function headersForModel(model){
 }
 function hasKeyForModel(model){ return !!keyForModel(model); }
 
-/* V7 PROJECT LOCK: Project đang bật THẮNG định tuyến theo mode/file. */
+/* V8 PROJECT LOCK + DAY LOCK: Project vẫn thắng định tuyến, nhưng ngày khóa ép text về Qwen 3.8 Max. */
 function routedModel(mode, hasDocs, imageMode){
-  if (curProj && projInstruction()) return CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
   if (imageMode === true) return CONFIG.VISION_MODEL;
+  if (isDayLocked()) return CONFIG.QWEN_MODEL;
+  if (curProj && projInstruction()) return normalizeProjectModel(AI.projectModel);
   if (mode === 'deep' || mode === 'web' || hasDocs) return CONFIG.DEEPSEEK_MODEL;
   return CONFIG.CHAT_MODEL || CONFIG.MODEL;
 }
 function fallbackChain(preferred){
-  var p = String(preferred || ''), arr=[];
-  function push(x){ if(x && arr.indexOf(x)<0) arr.push(x); }
+  var p = String(scheduledTextModel(preferred || '') || ''), arr=[];
+  function push(x){ x=scheduledTextModel(x); if(x && hasKeyForModel(x) && arr.indexOf(x)<0) arr.push(x); }
+  if (isDayLocked() && p !== CONFIG.VISION_MODEL){ push(CONFIG.QWEN_MODEL); return arr; }
   push(p);
 
-  // Chuỗi ưu tiên mới:
-  // Qwen 3.8 Max -> Qwen 3.8 Flash B.AI -> GLM-5.3-Flash B.AI -> DeepSeek -> HY3.
-  if (isQwenCloudModel(p)){
+  // Dự phòng tách provider: QwenCloud -> Kie -> B.AI. 401 của một provider sẽ không lặp trên cùng khóa.
+  if (isKieGeminiModel(p)){
+    push(CONFIG.QWEN_MODEL);
     if (AI.autoQwenFallback !== false) push(CONFIG.QWEN_FLASH_MODEL);
-    push(CONFIG.GLM_FLASH_MODEL);
-    push(CONFIG.DEEPSEEK_MODEL);
-    push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
+    push(CONFIG.GLM_FLASH_MODEL); push(CONFIG.DEEPSEEK_MODEL); push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
+  } else if (isQwenCloudModel(p)){
+    push(CONFIG.KIE_MODEL);
+    if (AI.autoQwenFallback !== false) push(CONFIG.QWEN_FLASH_MODEL);
+    push(CONFIG.GLM_FLASH_MODEL); push(CONFIG.DEEPSEEK_MODEL); push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (isBaiQwenFlashModel(p)){
-    // B.AI lỗi xác thực thì còn tuyến QwenCloud độc lập để cứu.
-    push(CONFIG.QWEN_MODEL);
-    push(CONFIG.GLM_FLASH_MODEL);
-    push(CONFIG.DEEPSEEK_MODEL);
-    push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
+    push(CONFIG.QWEN_MODEL); push(CONFIG.KIE_MODEL); push(CONFIG.GLM_FLASH_MODEL); push(CONFIG.DEEPSEEK_MODEL); push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (isBaiGlmFlashModel(p)){
-    // GLM dùng B.AI; đặt QwenCloud ngay sau để tránh lặp 401 trên cùng provider.
-    push(CONFIG.QWEN_MODEL);
-    push(CONFIG.DEEPSEEK_MODEL);
-    push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
+    push(CONFIG.QWEN_MODEL); push(CONFIG.KIE_MODEL); push(CONFIG.DEEPSEEK_MODEL); push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (p === CONFIG.VISION_MODEL){
-    push(CONFIG.DEEPSEEK_MODEL);
-    push(CONFIG.QWEN_MODEL);
+    push(CONFIG.DEEPSEEK_MODEL); push(CONFIG.QWEN_MODEL); push(CONFIG.KIE_MODEL);
     if (AI.autoQwenFallback !== false) push(CONFIG.QWEN_FLASH_MODEL);
-    push(CONFIG.GLM_FLASH_MODEL);
-    push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
+    push(CONFIG.GLM_FLASH_MODEL); push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else if (p === CONFIG.DEEPSEEK_MODEL){
-    push(CONFIG.QWEN_MODEL);
+    push(CONFIG.QWEN_MODEL); push(CONFIG.KIE_MODEL);
     if (AI.autoQwenFallback !== false) push(CONFIG.QWEN_FLASH_MODEL);
-    push(CONFIG.GLM_FLASH_MODEL);
-    push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
+    push(CONFIG.GLM_FLASH_MODEL); push(CONFIG.CHAT_MODEL || CONFIG.MODEL);
   } else {
-    push(CONFIG.QWEN_MODEL);
+    push(CONFIG.QWEN_MODEL); push(CONFIG.KIE_MODEL);
     if (AI.autoQwenFallback !== false) push(CONFIG.QWEN_FLASH_MODEL);
-    push(CONFIG.GLM_FLASH_MODEL);
-    push(CONFIG.DEEPSEEK_MODEL);
+    push(CONFIG.GLM_FLASH_MODEL); push(CONFIG.DEEPSEEK_MODEL);
   }
   return arr;
 }
@@ -1938,6 +1988,11 @@ function responseText(j){
     if (t) return t;
     if (typeof ch.text === 'string' && ch.text) return ch.text;
   }
+  if (j.candidates && j.candidates[0] && j.candidates[0].content){
+    var parts=j.candidates[0].content.parts || [], gt='';
+    parts.forEach(function(p){ if(p && typeof p.text==='string') gt += p.text; });
+    if (gt) return gt;
+  }
   if (typeof j.output_text === 'string') return j.output_text;
   if (j.data && typeof j.data.output_text === 'string') return j.data.output_text;
   return '';
@@ -1947,18 +2002,31 @@ function responseText(j){
 function modelReasoningMode(model, purpose){
   var m = String(model || '').toLowerCase();
   if (m === 'glm-5.3-flash') return CONFIG.GLM_REASONING_EFFORT || 'low';
+  if (isKieGeminiModel(m)) return purpose === 'chat' ? 'low' : 'high';
   if (m !== 'hy3') return '';
   if (purpose === 'chat' || purpose === 'extract') return 'no_think';
   return 'think_low';
 }
+function normalizeRequestBody(model, body, purpose){
+  var b={}; Object.keys(body||{}).forEach(function(k){ if(body[k] !== undefined) b[k]=body[k]; });
+  if (isKieGeminiModel(model)){
+    // Kie endpoint đã cố định model trong URL; docs không yêu cầu trường model trong body.
+    delete b.model; delete b.enable_thinking;
+    b.include_thoughts=false;
+    if (!b.reasoning_effort) b.reasoning_effort = purpose === 'chat' ? 'low' : 'high';
+    if (purpose === 'web' && !b.tools) b.tools=[{type:'function',function:{name:'googleSearch'}}];
+  }
+  return b;
+}
 function callOnce(msgs, model, maxTok, ms, extra){
+  model = scheduledTextModel(model);
   var body = {model:model, messages:msgs, stream:false, temperature:0.2, max_tokens:maxTok || 1200};
   if (extra) Object.keys(extra).forEach(function(k){ body[k]=extra[k]; });
   var effort = modelReasoningMode(model, 'extract');
   if (effort && body.reasoning_effort == null) body.reasoning_effort = effort;
   if (isQwenCloudModel(model) && body.enable_thinking == null) body.enable_thinking = false;
   function fire(b){
-    return hfetch(apiUrlForModel(model), {method:'POST',headers:headersForModel(model),body:JSON.stringify(b)}, ms || CONFIG.TIMEOUT_MS).then(function(r){
+    return hfetch(apiUrlForModel(model), {method:'POST',headers:headersForModel(model),body:JSON.stringify(normalizeRequestBody(model,b,'extract'))}, ms || CONFIG.TIMEOUT_MS).then(function(r){
       return r.text().then(function(t){
         if (!r.ok){ var er=new Error('HTTP '+r.status+' — '+t.slice(0,300)); er.status=r.status; er.body=t; throw er; }
         var j; try{ j=JSON.parse(t); }catch(e){ throw new Error('Máy chủ trả về dữ liệu lạ'); }
@@ -1980,7 +2048,7 @@ function callOnceRobust(msgs, preferredModel, maxTok, ms, extra){
   var chain=fallbackChain(preferredModel);
   var i=0,lastErr=null,badAuth={};
   function nextUsable(){
-    while(i < chain.length && badAuth[providerForModel(chain[i])]) i++;
+    while(i < chain.length && (!hasKeyForModel(chain[i]) || badAuth[providerForModel(chain[i])])) i++;
     return i < chain.length;
   }
   function attempt(withExtra){
@@ -2001,6 +2069,7 @@ function callOnceRobust(msgs, preferredModel, maxTok, ms, extra){
   return attempt(extra);
 }
 function callAPI(msgs, model, onDelta, onThink){
+  model = scheduledTextModel(model);
   var chatMode = state.mode === 'chat';
   var body={
     model:model, messages:msgs, stream:true,
@@ -2013,7 +2082,7 @@ function callAPI(msgs, model, onDelta, onThink){
   if (isQwenCloudModel(model)) body.enable_thinking=false;
 
   function request(useBody){
-    return hfetch(apiUrlForModel(model), {method:'POST',headers:headersForModel(model),body:JSON.stringify(useBody)}, CONFIG.TIMEOUT_MS).then(function(r){
+    return hfetch(apiUrlForModel(model), {method:'POST',headers:headersForModel(model),body:JSON.stringify(normalizeRequestBody(model,useBody,state.mode))}, CONFIG.TIMEOUT_MS).then(function(r){
       if (!r.ok){
         return r.text().then(function(t){ var e=new Error('HTTP '+r.status+' — '+(t||'').slice(0,400)); e.status=r.status; e.body=t||''; throw e; });
       }
@@ -2032,11 +2101,19 @@ function callAPI(msgs, model, onDelta, onThink){
         ln=String(ln||'').trim(); if(!ln||ln.indexOf('data:')!==0) return;
         var d=ln.slice(5).trim(); if(!d||d==='[DONE]') return;
         var j; try{j=JSON.parse(d);}catch(e){return;} if(j.error) throw new Error(j.error.message||JSON.stringify(j.error));
-        var ch=j.choices&&j.choices[0]; if(!ch) return;
-        var delta=ch.delta||ch.message||{};
-        if(delta.reasoning_content&&onThink) onThink(delta.reasoning_content);
-        var c=contentToText(delta.content)||(typeof ch.text==='string'?ch.text:'');
-        if(c){ full+=c; if(onDelta) onDelta(c); }
+        var ch=j.choices&&j.choices[0];
+        if(ch){
+          var delta=ch.delta||ch.message||{};
+          if(delta.reasoning_content&&onThink) onThink(delta.reasoning_content);
+          var c=contentToText(delta.content)||(typeof ch.text==='string'?ch.text:'');
+          if(c){ full+=c; if(onDelta) onDelta(c); }
+          return;
+        }
+        if(j.candidates&&j.candidates[0]&&j.candidates[0].content){
+          var parts=j.candidates[0].content.parts||[], c2='';
+          parts.forEach(function(p){ if(p&&typeof p.text==='string') c2+=p.text; });
+          if(c2){ full+=c2; if(onDelta) onDelta(c2); }
+        }
       }
       function pump(){
         return reader.read().then(function(res){
@@ -2319,7 +2396,7 @@ function send(){
 
     var chain = fallbackChain(model);
     var idx = 0, badAuth = {};
-    function nextUsable(){ while(idx < chain.length && badAuth[providerForModel(chain[idx])]) idx++; return idx < chain.length; }
+    function nextUsable(){ while(idx < chain.length && (!hasKeyForModel(chain[idx]) || badAuth[providerForModel(chain[idx])])) idx++; return idx < chain.length; }
     function attempt(){
       if (!nextUsable()) return Promise.reject(new Error('Không còn tuyến API khả dụng sau lỗi xác thực.'));
       model = chain[idx];
@@ -2585,15 +2662,24 @@ function openHistory(){
    CÀI ĐẶT
    ============================================================ */
 function f(name){ return el.ovSet.querySelector('[data-f="' + name + '"]'); }
+function updateDayLockStatus(){
+  var st=el.ovSet && el.ovSet.querySelector('[data-daystatus]'); if(!st) return;
+  var names=['','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật'];
+  var d=vnWeekday(), locked=(AI.lockDays||[]).indexOf(d)>=0;
+  st.textContent = 'Hôm nay: ' + names[d] + (locked ? ' — ĐANG KHÓA: chỉ Qwen 3.8 Max được dùng cho chat.' : ' — Không khóa: định tuyến AI hoạt động bình thường.');
+}
 function fillSettings(){
   f('base').value = AI.base; f('key').value = AI.key;
   f('model').value = CONFIG.CHAT_MODEL || CONFIG.MODEL;
-  f('projectModel').value = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
+  f('projectModel').value = normalizeProjectModel(AI.projectModel);
   f('autoQwenFallback').checked = AI.autoQwenFallback !== false;
   f('qwenBase').value = AI.qwenBase || CONFIG.QWEN_PROXY_BASE;
   f('qwenKey').value = AI.qwenKey || CONFIG.QWEN_API_KEY;
   f('qwenFlashBase').value = AI.qwenFlashBase || CONFIG.QWEN_FLASH_BASE;
   f('qwenFlashKey').value = AI.qwenFlashKey || CONFIG.QWEN_FLASH_API_KEY;
+  f('kieBase').value = AI.kieBase || CONFIG.KIE_BASE; f('kieKey').value = AI.kieKey || CONFIG.KIE_API_KEY;
+  el.ovSet.querySelectorAll('[data-lockday]').forEach(function(cb){ cb.checked = (AI.lockDays || []).indexOf(Number(cb.getAttribute('data-lockday'))) >= 0; });
+  updateDayLockStatus();
   f('temp').value = AI.temp; f('maxTok').value = AI.maxTok;
   f('sysPrompt').value = AI.sysPrompt;
   f('reader').value = AI.reader; f('rounds').value = AI.rounds; f('openN').value = AI.openN;
@@ -2611,12 +2697,15 @@ function readSettings(){
   AI.base = (f('base').value || CONFIG.API_BASE).trim().replace(/\/+$/,'');
   AI.key = cleanKey(f('key').value);
   AI.model = CONFIG.CHAT_MODEL || CONFIG.MODEL; // model thật được routedModel() chọn theo chế độ
-  AI.projectModel = CONFIG.PROJECT_MODEL || CONFIG.QWEN_MODEL;
+  AI.projectModel = normalizeProjectModel(f('projectModel').value || AI.projectModel);
   AI.autoQwenFallback = !!f('autoQwenFallback').checked;
   AI.qwenBase = (f('qwenBase').value || CONFIG.QWEN_PROXY_BASE).trim().replace(/\/+$/,'');
   AI.qwenKey = cleanKey(f('qwenKey').value || AI.qwenKey || CONFIG.QWEN_API_KEY);
   AI.qwenFlashBase = (f('qwenFlashBase').value || CONFIG.QWEN_FLASH_BASE || CONFIG.API_BASE).trim().replace(/\/+$/,'');
   AI.qwenFlashKey = cleanKey(f('qwenFlashKey').value || AI.qwenFlashKey || CONFIG.QWEN_FLASH_API_KEY || AI.key);
+  AI.kieBase = (f('kieBase').value || CONFIG.KIE_BASE).trim().replace(/\/+$/,'');
+  AI.kieKey = cleanKey(f('kieKey').value || AI.kieKey || CONFIG.KIE_API_KEY);
+  AI.lockDays = Array.prototype.slice.call(el.ovSet.querySelectorAll('[data-lockday]:checked')).map(function(cb){return Number(cb.getAttribute('data-lockday'));}).filter(function(d){return d>=1&&d<=7;});
   AI.qwenRegion = AI.qwenRegion || CONFIG.QWEN_REGION;
   AI.temp = Math.max(0, Math.min(2, parseFloat(f('temp').value) || CONFIG.TEMPERATURE));
   AI.maxTok = Math.max(256, parseInt(f('maxTok').value,10) || CONFIG.MAX_TOKENS);
@@ -2634,6 +2723,7 @@ function saveSettings(){
   readSettings();
   state.setTouched = false;
   el.ovSet.classList.remove('open');            // đóng bảng trước khi in vào khung chat
+  renderProjSelect();
   addMsg('sys','Đã lưu cài đặt AI.' + (fbOn() ? ' · Firebase đã khai' : ''));
   if (fbOn()) fbPushConfig().catch(function(e){ notice('Cài đặt chưa lên được Firebase: ' + (e.message || e)); });
 }
@@ -2641,6 +2731,7 @@ function resetSettings(){
   AI.base = CONFIG.API_BASE; AI.key = CONFIG.API_KEY; AI.model = CONFIG.CHAT_MODEL || CONFIG.MODEL;
   AI.qwenBase = CONFIG.QWEN_PROXY_BASE; AI.qwenKey = CONFIG.QWEN_API_KEY; AI.qwenRegion = CONFIG.QWEN_REGION;
   AI.qwenFlashBase = CONFIG.QWEN_FLASH_BASE; AI.qwenFlashKey = CONFIG.QWEN_FLASH_API_KEY;
+  AI.kieBase = CONFIG.KIE_BASE; AI.kieKey = CONFIG.KIE_API_KEY; AI.lockDays = (CONFIG.LOCK_DAYS || []).slice();
   AI.autoQwenFallback = CONFIG.QWEN_AUTO_FALLBACK !== false; AI.projectModel = CONFIG.PROJECT_MODEL;
   AI.temp = CONFIG.TEMPERATURE; AI.maxTok = CONFIG.MAX_TOKENS; AI.sendImage = CONFIG.SEND_IMAGE;
   AI.sysPrompt = CONFIG.SYSTEM_PROMPT; AI.reader = CONFIG.READER;
@@ -2653,14 +2744,14 @@ function resetSettings(){
 function testConnection(){
   readSettings();
   el.ovSet.classList.remove('open');
-  var line = addMsg('sys','Đang kiểm tra HY3 · DeepSeek V4 Flash · Qwen 3.8 Max · Qwen 3.8 Flash B.AI · GLM-5.3-Flash B.AI…');
+  var line = addMsg('sys','Đang kiểm tra HY3 · DeepSeek V4 Flash · Qwen 3.8 Max · Gemini 3.8 Flash Kie.ai · Qwen 3.8 Flash B.AI · GLM-5.3-Flash B.AI…');
   function ping(model){
     if (!hasKeyForModel(model)) return Promise.resolve({model:model,ok:false,status:0});
     return hfetch(apiUrlForModel(model), {
       method:'POST', headers:headersForModel(model),
-      body: JSON.stringify({model:model, messages:[{role:'user',content:'Trả lời đúng 1 chữ: OK'}], max_tokens:12, stream:false,
+      body: JSON.stringify(normalizeRequestBody(model,{model:model, messages:[{role:'user',content:'Trả lời đúng 1 chữ: OK'}], max_tokens:12, stream:false,
                             enable_thinking:isQwenCloudModel(model)?false:undefined,
-                            reasoning_effort:isBaiGlmFlashModel(model)?(CONFIG.GLM_REASONING_EFFORT||'low'):undefined})
+                            reasoning_effort:isBaiGlmFlashModel(model)?(CONFIG.GLM_REASONING_EFFORT||'low'):undefined},'chat'))
     }, 30000).then(function(r){ return r.text().then(function(t){ return {model:model,ok:r.ok && !AUTH_ERR.test(t),status:r.status,t:t}; }); })
       .catch(function(e){ return {model:model,ok:false,error:String(e.message||e)}; });
   }
@@ -2668,6 +2759,7 @@ function testConnection(){
     ping(CONFIG.CHAT_MODEL || CONFIG.MODEL),
     ping(CONFIG.DEEPSEEK_MODEL),
     ping(CONFIG.QWEN_MODEL),
+    ping(CONFIG.KIE_MODEL),
     ping(CONFIG.QWEN_FLASH_MODEL),
     ping(CONFIG.GLM_FLASH_MODEL)
   ]).then(function(a){
@@ -2675,8 +2767,9 @@ function testConnection(){
       (a[0].ok?'✅ HY3':'⚠️ HY3') + ' · ' +
       (a[1].ok?'✅ DeepSeek':'⚠️ DeepSeek') + ' · ' +
       (a[2].ok?'✅ Qwen 3.8 Max':'⚠️ Qwen 3.8 Max') + ' · ' +
-      (a[3].ok?'✅ Qwen 3.8 Flash B.AI':'⚠️ Qwen 3.8 Flash B.AI') + ' · ' +
-      (a[4].ok?'✅ GLM-5.3-Flash B.AI':'⚠️ GLM-5.3-Flash B.AI') +
+      (a[3].ok?'✅ Gemini 3.8 Flash Kie.ai':'⚠️ Gemini 3.8 Flash Kie.ai') + ' · ' +
+      (a[4].ok?'✅ Qwen 3.8 Flash B.AI':'⚠️ Qwen 3.8 Flash B.AI') + ' · ' +
+      (a[5].ok?'✅ GLM-5.3-Flash B.AI':'⚠️ GLM-5.3-Flash B.AI') +
       (a.some(function(x){return x.ok;}) ? ' — hệ thống có tuyến AI hoạt động.' : ' — kiểm tra lại API key/quyền model.');
   });
 }
