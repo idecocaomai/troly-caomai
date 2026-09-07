@@ -77,12 +77,15 @@
    ============================================================ */
 var CONFIG = {
   ID:            'ideco-chao-ban',
-  BUILD_REV:     '20260906-8.0-GEMINI38-KIE-DAYLOCK-QWEN',               // in ra Console để biết trình duyệt nạp đúng bản
+  BUILD_REV:     '20260907-8.1-SETTINGS-PASSWORD',               // in ra Console để biết trình duyệt nạp đúng bản
 
   BRAND:         'IDECO',
   LAUNCH_TEXT:   'Chào Bạn',
   BOT_NAME:      'CHUYÊN GIA TƯ VẤN',
   LOGO_URL:      '',
+
+  /* ---- Bảo vệ khu vực Cài đặt ---- */
+  SETTINGS_PASSWORD: 'minhtriet1973',
 
   SIDE:          'right',
   OFFSET_X:      22,
@@ -637,6 +640,15 @@ button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-vis
 
 .ov{position:absolute;inset:0;background:#fff;z-index:5;display:none;flex-direction:column}
 .ov.open{display:flex}
+.setlock{z-index:14;background:rgba(15,23,42,.72);align-items:center;justify-content:center;padding:20px}
+.setlockbox{width:min(390px,100%);background:#fff;border-radius:18px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);text-align:center}
+.setlockbox .lockicon{font-size:38px;line-height:1;margin-bottom:10px}
+.setlockbox h3{margin:0 0 7px;font-size:20px;color:var(--ink)}
+.setlockbox p{margin:0 0 14px;color:var(--ink2);font-size:12.5px;line-height:1.5}
+.setlockbox input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:15px;text-align:center;letter-spacing:.08em;outline:none}
+.setlockbox input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(218,41,28,.10)}
+.setlockerr{min-height:18px;margin-top:8px;color:#b91c1c;font-size:12px;font-weight:700}
+.setlockbox .acts{justify-content:center;margin-top:8px}.setlockbox .btn{min-width:130px}
 .imgask{z-index:8;background:rgba(15,23,42,.55);align-items:center;justify-content:center;padding:20px}
 .imgask.open{display:flex}
 .imgaskbox{width:min(420px,100%);background:#fff;border-radius:18px;padding:22px;box-shadow:0 22px 60px rgba(0,0,0,.28);text-align:center}
@@ -764,6 +776,18 @@ function build(){
         '<button class="send" data-a="send" title="Gửi">➤</button>' +
       '</div>' +
       '<div class="hint" data-hint>Dán ảnh bằng Ctrl+V. Dán đường link vào ô chat để trợ lý mở trang đó ra đọc.</div>' +
+    '</div>' +
+
+    /* ---------- Đăng nhập bảo vệ Cài đặt ---------- */
+    '<div class="ov setlock" data-ov-setlock>' +
+      '<div class="setlockbox">' +
+        '<div class="lockicon">🔐</div>' +
+        '<h3>ĐĂNG NHẬP CÀI ĐẶT</h3>' +
+        '<p>Vui lòng nhập mật khẩu để mở khu vực Cài đặt.</p>' +
+        '<input data-set-pass type="password" autocomplete="current-password" placeholder="Nhập mật khẩu" aria-label="Mật khẩu Cài đặt">' +
+        '<div class="setlockerr" data-set-pass-err></div>' +
+        '<div class="acts"><button class="btn gr" data-a="set-login">🔓 Đăng nhập</button><button class="btn gh" data-a="set-cancel">Hủy</button></div>' +
+      '</div>' +
     '</div>' +
 
     /* ---------- Bảng Cài đặt ---------- */
@@ -936,6 +960,9 @@ function build(){
     hint: panel.querySelector('[data-hint]'),
     psel: panel.querySelector('[data-psel]'),
     ovSet: panel.querySelector('[data-ov-set]'),
+    ovSetLock: panel.querySelector('[data-ov-setlock]'),
+    setPass: panel.querySelector('[data-set-pass]'),
+    setPassErr: panel.querySelector('[data-set-pass-err]'),
     ovHist: panel.querySelector('[data-ov-hist]'),
     ovImg: panel.querySelector('[data-ov-img]'),
     ovCreate: panel.querySelector('[data-ov-create]'),
@@ -1008,12 +1035,14 @@ function bind(){
     else if (a === 'send')  send();
     else if (a === 'new')   newChat();
     else if (a === 'set')   openSettings();
+    else if (a === 'set-login') unlockSettings();
+    else if (a === 'set-cancel') closeSettingsLogin();
     else if (a === 'hist')  openHistory();
     else if (a === 'create') openCreate();
     else if (a === 'create-close') closeCreate();
     else if (a === 'create-pick') el.imgIn.click();
     else if (a === 'create-run') runCreateFromPopup();
-    else if (a === 'close-ov'){ el.ovSet.classList.remove('open'); el.ovHist.classList.remove('open'); if(el.ovCreate) el.ovCreate.classList.remove('open'); state.setTouched = false; }
+    else if (a === 'close-ov'){ el.ovSet.classList.remove('open'); el.ovHist.classList.remove('open'); if(el.ovSetLock) el.ovSetLock.classList.remove('open'); if(el.ovCreate) el.ovCreate.classList.remove('open'); state.setTouched = false; }
     else if (a === 'save-set')   saveSettings();
     else if (a === 'reset-set')  resetSettings();
     else if (a === 'test')       testConnection();
@@ -1032,6 +1061,12 @@ function bind(){
   });
 
   el.ovSet.addEventListener('input', function(){ state.setTouched = true; });
+  if (el.setPass){
+    el.setPass.addEventListener('keydown', function(ev){
+      if (ev.key === 'Enter'){ ev.preventDefault(); unlockSettings(); }
+      else if (el.setPassErr) el.setPassErr.textContent = '';
+    });
+  }
 
   el.ta.addEventListener('keydown', function(ev){
     if (ev.key === 'Enter' && !ev.shiftKey){ ev.preventDefault(); send(); }
@@ -2687,6 +2722,33 @@ function fillSettings(){
   f('fbUrl').value = AI.fbUrl; f('fbNode').value = AI.fbNode;
 }
 function openSettings(){
+  /* V8.1 — luôn yêu cầu mật khẩu trước khi mở Cài đặt. */
+  el.ovHist.classList.remove('open');
+  if (el.ovCreate) el.ovCreate.classList.remove('open');
+  if (el.setPass){ el.setPass.value = ''; }
+  if (el.setPassErr){ el.setPassErr.textContent = ''; }
+  if (el.ovSetLock){
+    el.ovSetLock.classList.add('open');
+    setTimeout(function(){ try{ el.setPass.focus(); }catch(_e){} }, 0);
+    return;
+  }
+}
+function closeSettingsLogin(){
+  if (el.ovSetLock) el.ovSetLock.classList.remove('open');
+  if (el.setPass) el.setPass.value = '';
+  if (el.setPassErr) el.setPassErr.textContent = '';
+}
+function unlockSettings(){
+  var pwd = el.setPass ? String(el.setPass.value || '') : '';
+  if (pwd !== String(CONFIG.SETTINGS_PASSWORD || '')){
+    if (el.setPassErr) el.setPassErr.textContent = '❌ Mật khẩu không đúng. Vui lòng nhập lại.';
+    if (el.setPass){ el.setPass.value = ''; try{ el.setPass.focus(); }catch(_e){} }
+    return;
+  }
+  closeSettingsLogin();
+  openSettingsUnlocked();
+}
+function openSettingsUnlocked(){
   el.ovHist.classList.remove('open');
   state.setTouched = false;
   fillSettings(); renderProjList();
